@@ -35,7 +35,7 @@ public class Card{
 		for(String t : Card.facecards){rankings.put(i,t);i--;}
 	}
 	
-	void showMe(){System.out.println(this.rank+this.suit);}
+	void showMe(){System.out.println(this.rank+" "+this.suit);}
 	
 	
 }

@@ -2,15 +2,16 @@ import java.util.*;
 
 /**<DECK>
  * A deck of Card objects. 
- * For more information: 
- * {@link https://github/com/TylersDurden/Poker}
  * @dependencies Card.java  
  * @author root
-  */
+ * For more information: 
+ * {@link https://github/com/TylersDurden/Poker}
+ */
 public class Deck {
 	
 	public final static String [] suitOpts = {"S","H","C","D" };
 	public static Vector<Card> self = new Vector<>();
+	public static Map<Card,Boolean> cardsInPlay = new HashMap<>();
 	
 	public Deck(){
 		//create an initial deck (not shuffled) 
@@ -26,10 +27,35 @@ public class Deck {
 			}
 		}
 		System.out.println("Created a deck of "+Deck.self.size()+" cards");
+		for(Card c : Deck.self){cardsInPlay.put(c,false);}
 	}
+	
+	public static Vector<Card> deal(int nCards){
+	    Deck.shuffle();
+	    Vector<Card> hand = new Vector<>();
+	    //If card isnt in play then deal it
+	    for(int i=0;i<nCards;i++){
+	        if(cardsInPlay.get(Deck.self.get(i))!=true){
+	            hand.add(Deck.self.get(i));
+	            }
+	        }
+	     // once cards are dealt make sure deck knows they're in play
+	    for(Map.Entry<Card,Boolean>entry:cardsInPlay.entrySet()){
+	        for(Card c : hand){
+	            if(entry.getKey().suit.compareTo(c.suit)==0 && 
+	               entry.getKey().rank==c.rank){
+	                cardsInPlay.put(entry.getKey(),true); 
+	            }
+	        }
+	    }
+	   return hand;
+	}
+	
 	
 	public static void shuffle(){Collections.shuffle(self);}
 	
-	public static void main(String[]args){ new Deck();}
+	public static void main(String[]args){
+	    Deck d = new Deck();
+	    }
 		
 }

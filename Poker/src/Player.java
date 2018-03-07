@@ -1,6 +1,6 @@
-import java.util.*;
+ import java.util.*;
 
-/**<PLAYER >
+/**PLAYER 
  * A poker player object
  * @documentation  For more information:
  * {@link https://github/com/TylersDurden/Poker}
@@ -45,6 +45,23 @@ public class Player {
         strt.clear();
         house.clear();
     }
+    
+    static class Hand {
+        
+        Hand(String mode, Vector<Card> cards){
+                
+        }
+        
+        void AIPreFlop(){}
+    
+        void AIflop(){}
+        
+        void AIriver(){}
+    
+        void AIturn(){}
+        
+    }
+    
 
 }
 /** <EndOf:_PLAYER.java_> */
