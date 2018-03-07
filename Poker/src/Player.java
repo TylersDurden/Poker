@@ -11,48 +11,60 @@ public class Player {
     public Vector<Card> hand;
     public Vector<Card> tableCards;
     public String       player;
-    public int          chips;
+    public int          chipcount;
     
-    public Vector<Card> highest = new Vector<>();
-    public Vector<Card> pair    = new Vector<>();//
-    public Vector<Card> twoPair = new Vector<>();//
-    public Vector<Card> tres    = new Vector<>();// Three of a Kind
-    public Vector<Card> flush   = new Vector<>();//
-    public Vector<Card> strt    = new Vector<>();// Straight
-    public Vector<Card> house   = new Vector<>();// Full House 
-    public Vector<Card>strFlush = new Vector<>();// Straight Flush 
-    public Vector<Card> quads   = new Vector<>();// Four of a Kind  
-    public Vector<Card> rylFlush = new Vector<>();// Royal Flush
-
+    public boolean folded;
+    
     public Player(String name, int buyIn) {
         this.player = name;
-        this.chips = buyIn;
+        this.chipcount = buyIn;
+        this.folded = false;
     }
 
     void getHand(Vector<Card> dealtCards) {this.hand = dealtCards;}
 
     void showHand() {for (Card c : hand) {c.showMe();}}
 
-    void placeBet(int amt) {if (amt < chips) {chips -= amt;}}
+    void placeBet(int amt) {if (amt < chipcount) {chipcount -= amt;}}
 
     void setTable(Vector<Card> table) {tableCards = table;}
     
-    void clearProbabilities(){
-        pair.clear();
-        twoPair.clear();
-        tres.clear();
-        flush.clear();
-        strt.clear();
-        house.clear();
+   
+    
+    ////////////////// AI //////////////////////
+    int anteUp(int amt){
+        int answer = 0; //return -1 for a fold 
+        answer = new Hand("preflop",this.hand).evaluate();
+        return answer;
     }
     
     static class Hand {
         
+        public String context;
+        public Vector <Card> hand = new Vector<>();
+        
         Hand(String mode, Vector<Card> cards){
-                
+                this.context = mode;
+                this.hand = cards;
+                switch(this.context){
+                    case("preflop"):
+                        AIpreFlop();
+                    case("flop"):
+                        AIflop();
+                    case("turn"):
+                        AIturn();
+                    case("river"):
+                        AIriver();
+                    case("raise"):
+                        AIraise();
+                    default:
+                        break;
+                }
         }
         
-        void AIPreFlop(){}
+        void AIpreFlop(){
+            
+        }
     
         void AIflop(){}
         
@@ -60,6 +72,15 @@ public class Player {
     
         void AIturn(){}
         
+        void AIraise(){
+            
+        }
+        
+        int evaluate(){
+            int choice = -1;
+            
+            return choice;
+        }
     }
     
 

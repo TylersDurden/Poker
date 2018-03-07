@@ -8,6 +8,7 @@ public class Game{
     public Dealer house;
     public Table table;
     public Vector<Player> players = new Vector<>();
+    public static int STATE = 0; //Keep track of moving blinds after each hand
     
     public Game(Dealer deal, Table t, Vector<Player> ps){
         System.out.println("- - - - - - - - - - - - - - ");
@@ -15,21 +16,56 @@ public class Game{
                            "Small Blinds start at 500\n" +
                            "Big Blinds start at 750 ");
         System.out.println("- - - - - - - - - - - - - - ");
-        /** Set up the dealer [house] and the table */
+        /** Set up the dealer [house], table and players */
         this.house = deal;
         this.table = t;
-        /** Deal each player their intial hand */
-       this.players = ps;
+        this.players = ps;
+        
+        //Define the order of play, and whos big blind/small blind 
+        anteUp();
+
+        /** Deal each player their intial hand */       
        dealHandsToPlayers();
        System.out.println("Each Player Dealt a hand.");
        
-       //Define the order of play, and whos big blind/small blind 
+       //Let players decide on checking/betting 
+        
        
     }
     
+    void anteUp(){
+        if(Game.STATE==0){
+            System.out.println(this.players.get(0).player+" has big blind ");
+            System.out.println(this.players.get(1).player+" has small blind");
+            for(Player p : this.players){
+                if(p == this.players.get(0)){
+                    this.table.setCurrentBet(this.table.smallblind);
+                    //TODO: will p1 check/bet/fold the small blind?
+                    }
+                //If player 1 folds, small blind passed to p2
+                if(p==this.players.get(1) && this.table.pot==0){
+                    this.table.setCurrentBet(this.table.smallblind);
+                    //TODO: will p2 check/bet/fold the small blind?
+                    }
+                if(p==this.players.get(1) && this.table.pot>0){
+                    this.table.setCurrentBet(this.table.bigblind);
+                    //TODO: will p2 check/bet/fold the big blind?
+                }
+                
+                
+            }
+        }else{
+            int big = (int)Game.STATE%1;
+            int small = (int)Game.STATE%2;
+            
+        }
+        
+        
+    }
     
-    
-    void betHandler(){}
+    void betHandler(){
+        
+    }
     
     //Each player is initially dealt a 2 card hand  
     void dealHandsToPlayers(){

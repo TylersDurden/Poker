@@ -12,7 +12,9 @@ public class Table{
     
     public int smallblind = 500;
     public int bigblind = 750;
+    public int pot; 
     public static int seats; 
+    public static int Bet = 0;
     public Vector<Player> players = new Vector<>();
     
     public Table(int nseats,Vector<Player>ppl){
@@ -28,6 +30,8 @@ public class Table{
         for(Player p : ps){System.out.print(p.player+" ");}
         System.out.println("");
     }
+    
+    void setCurrentBet(int bet){Table.Bet = bet;}
     
     public static void main(String[]args){}
     
