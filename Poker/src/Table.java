@@ -17,6 +17,8 @@ public class Table{
     public static int Bet = 0;
     public Vector<Player> players = new Vector<>();
     
+    public static Vector<Card> tablecards = new Vector<>();
+    
     public Table(int nseats,Vector<Player>ppl){
         Table.seats = nseats;
         this.players = ppl;
@@ -30,6 +32,8 @@ public class Table{
         for(Player p : ps){System.out.print(p.player+" ");}
         System.out.println("");
     }
+    
+    void addCardsToTable(Vector<Card>cards){for(Card c :cards){tablecards.add(c);}}
     
     void setCurrentBet(int bet){Table.Bet = bet;}
     
