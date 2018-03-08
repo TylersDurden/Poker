@@ -1,4 +1,4 @@
 #!/bin/bash
 javac Deck.java Card.java Player.java 
-javac Dealer.java Table.java Game.java
+javac Table.java Game.java AI.java
 java Game

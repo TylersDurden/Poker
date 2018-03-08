@@ -8,6 +8,7 @@ public class Game {
     public Dealer         house;
     public Table          table;
     public Vector<Player> players = new Vector<>();
+    public static Vector<AI> Bots = new Vector<>();
     public static int     STATE   = 0;             //Keep track of moving blinds after each hand
 
     public Game(Dealer deal, Table t, Vector<Player> ps) {
@@ -24,9 +25,9 @@ public class Game {
         anteUp();
         
         /** Deal each player their intial hand */
-        dealHandsToPlayers();
+        Game.Bots = dealHandsToPlayers();
         System.out.println("Each Player Dealt a hand.");
-
+        //AI charlie = new AI(players.get(2));
         
         //Let players decide on checking/betting
         /**TODO:
@@ -40,16 +41,19 @@ public class Game {
         this.table.addCardsToTable(this.house.cards.deal(3));
         System.out.println("FLOP:");
         for(Card c:this.table.tablecards){c.showMe();}
+        //charlie.reviewTable(this.table.tablecards);
         
         // Deal Turn 
-        //this.table.addCardsToTable(this.house.cards.deal(1));
-        //System.out.println("Turn: "+this.table.tablecards);
+        this.table.addCardsToTable(this.house.cards.deal(1));
+        System.out.println("Turn: ");
+        for(Card c:this.table.tablecards){c.showMe();}
         //Deal River
-        //this.table.addCardsToTable(this.house.cards.deal(1));
-        //System.out.println("River: "+this.table);
-        
+        this.table.addCardsToTable(this.house.cards.deal(1));
+        System.out.println("River: ");
+        for(Card c:this.table.tablecards){c.showMe();}
         
         //Evaluate best hand for players left 
+        System.out.println("Who wins?");
     }
     
     
@@ -88,14 +92,13 @@ public class Game {
     }
 
     //Each player is initially dealt a 2 card hand  
-    void dealHandsToPlayers() {
+    Vector<AI> dealHandsToPlayers() {
+        Vector<AI> bots = new Vector<>();
         for (Player p : this.players) {
             p.getHand(this.house.cards.deal(2));
+            AI bot = new AI(p);
         }
-        /**For Debug purposes, print player 1 hand to see.
-        //this.players.get(0).showHand();
-        //this.players.get(1).showHand();*/
-
+        return bots;
     }
 
 
