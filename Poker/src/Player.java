@@ -14,12 +14,20 @@ public class Player {
     public int          chipcount;
     
     public boolean folded;
+    public boolean bigblind = false;
+    public boolean smallblind = false;
     
     public Player(String name, int buyIn) {
         this.player = name;
         this.chipcount = buyIn;
         this.folded = false;
     }
+    
+    void setBigBlind(){this.bigblind = true;}
+    
+    void setSmallBlind(){this.smallblind = true;}
+    
+    
 
     void getHand(Vector<Card> dealtCards) {this.hand = dealtCards;}
 
@@ -36,6 +44,11 @@ public class Player {
         int answer = 0; //return -1 for a fold 
         answer = new Hand("preflop",this.hand).evaluate();
         return answer;
+    }
+    
+    int evaluateHand(){
+        int choice = -1;
+        return choice;
     }
     
     static class Hand {
