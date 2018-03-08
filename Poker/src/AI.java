@@ -13,7 +13,7 @@ public class AI {
     
     public Vector<Card> highest = new Vector<>();
     public Vector<Card> pair    = new Vector<>();//
-    public Vector<Card> twoPair = new Vector<>();//
+    public Vector<Card> twopair = new Vector<>();//
     public Vector<Card> tres    = new Vector<>();// Three of a Kind
     public Vector<Card> flush   = new Vector<>();//
     public Vector<Card> strt    = new Vector<>();// Straight
@@ -22,10 +22,10 @@ public class AI {
     public Vector<Card> quads   = new Vector<>();// Four of a Kind  
     public Vector<Card> rylFlush = new Vector<>();// Royal Flush
 
-    
+    public String name;
 
     public AI(Player bot){
-        
+        this.name = bot.player;
         /** Display the player's name and hand */
         System.out.println("- - - - - [AI] - - - - -");
         System.out.print(bot.player+" has:\n");
@@ -40,6 +40,7 @@ public class AI {
         //Make sure the hand is correct size first
         if(h.size()!=2){System.out.println("Hand is invalid");}
         else{
+            this.hand = h;
             if(h.get(0).rank==h.get(1).rank){//pair! 
                 this.pair.add(h.get(0));
                 this.pair.add(h.get(1));
@@ -55,10 +56,34 @@ public class AI {
         //Debug printouts 
         if(this.pair.size()>0){System.out.println("Pair of "+this.pair.get(0).rank+"s");}
         if(this.highest.size()>0){System.out.println("Has "+this.highest.size()+" Face cards.");}
-        if(this.flush.size()>0){System.out.println(this.flush.size()+" "+this.flush.get(0).suit);}
+        if(this.flush.size()>0){System.out.println("Has "+this.flush.size()+" "+this.flush.get(0).suit);}
     }
     
-    void reviewTable(Vector<Card>dealt){
+     void reviewTable(Vector<Card>dealt){
+      
+        Vector<Integer> ranks = new Vector<>();
+        Vector<String>  suits = new Vector<>();
+        System.out.println("---["+this.name+" reviews hand]---");
+         
+        for(Card c:dealt){
+            for(Card cs : this.hand){
+                
+            } 
+
+        }
+        
+        if(this.pair.size()>=2){
+            int r1 = this.pair.get(0).rank;
+            for(Card c : this.pair){
+                if(c.rank!=r1){this.twopair.add(c);}
+                c.showMe();
+            }
+        }
+        if(this.flush.size()>0){
+            int suitcount = 0;
+            Set<Card> nc = new HashSet<Card>(this.flush);
+            if(nc.size()==5){System.out.println("Picked up a flush!");}
+            }
         
     }
     

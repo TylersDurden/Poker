@@ -33,13 +33,17 @@ public class Deck {
 	public static Vector<Card> deal(int nCards){
 	    Deck.shuffle();
 	    Vector<Card> hand = new Vector<>();
+	    int dealt = 0;
 	    //If card isnt in play then deal it
-	    for(int i=0;i<nCards;i++){
-	        if(cardsInPlay.get(Deck.self.get(i))!=true){
-	            hand.add(Deck.self.get(i));
+	        for(Card i : Deck.self){
+	           if(cardsInPlay.get(i)!=true && hand.size()<nCards){
+	                hand.add(i);
+	                cardsInPlay.put(i,true);
+	                dealt ++;
 	            }
 	        }
-	     // once cards are dealt make sure deck knows they're in play
+	    
+	     /** once cards are dealt make sure deck knows they're in play
 	    for(Map.Entry<Card,Boolean>entry:cardsInPlay.entrySet()){
 	        for(Card c : hand){
 	            if(entry.getKey().suit.compareTo(c.suit)==0 && 
@@ -47,7 +51,9 @@ public class Deck {
 	                cardsInPlay.put(entry.getKey(),true); 
 	            }
 	        }
-	    }
+	    }*/
+	    
+	    
 	   return hand;
 	}
 	

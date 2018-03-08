@@ -27,7 +27,9 @@ public class Game {
         /** Deal each player their intial hand */
         Game.Bots = dealHandsToPlayers();
         System.out.println("Each Player Dealt a hand.");
-        //AI charlie = new AI(players.get(2));
+        AI mac     = new AI(this.players.get(0));
+        AI dennis  = new AI(this.players.get(1));
+        AI charlie = new AI(this.players.get(2));
         
         //Let players decide on checking/betting
         /**TODO:
@@ -41,17 +43,26 @@ public class Game {
         this.table.addCardsToTable(this.house.cards.deal(3));
         System.out.println("FLOP:");
         for(Card c:this.table.tablecards){c.showMe();}
-        //charlie.reviewTable(this.table.tablecards);
+        mac.reviewTable(this.table.tablecards);
+        dennis.reviewTable(this.table.tablecards);
+        charlie.reviewTable(this.table.tablecards);
         
         // Deal Turn 
         this.table.addCardsToTable(this.house.cards.deal(1));
         System.out.println("Turn: ");
         for(Card c:this.table.tablecards){c.showMe();}
+        mac.reviewTable(this.table.tablecards);
+        dennis.reviewTable(this.table.tablecards);
+        charlie.reviewTable(this.table.tablecards);
+        
         //Deal River
         this.table.addCardsToTable(this.house.cards.deal(1));
         System.out.println("River: ");
         for(Card c:this.table.tablecards){c.showMe();}
-        
+        mac.reviewTable(this.table.tablecards);
+        dennis.reviewTable(this.table.tablecards);
+        charlie.reviewTable(this.table.tablecards);
+         
         //Evaluate best hand for players left 
         System.out.println("Who wins?");
     }
@@ -87,8 +98,8 @@ public class Game {
 
     }
 
-    void betHandler() {
-
+    void betHandler(Vector<Card>cards) {
+        for(AI bot : Game.Bots){bot.reviewTable(cards);}
     }
 
     //Each player is initially dealt a 2 card hand  
@@ -103,7 +114,7 @@ public class Game {
 
 
     public static void main(String[] args) {
-        if (args.length < 1) { //Args should be a users player name
+        if (args.length < 1) { //Args should be a player name
             System.out.println("< RUNNING: [Simulation-Mode] >");
             
             /**Create the <Dealer> for the Game */
@@ -124,6 +135,7 @@ public class Game {
 
             /** <:RUN_GAME:> */
             Game g = new Game(d, tble, players);
+            
         } else { ////////////////////////////////////////////////////////
             //TODO: Handle live gameplay with user once the AI
             // mechanics are worked out. 
