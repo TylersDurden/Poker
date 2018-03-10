@@ -16,7 +16,7 @@ public class Card{
 	public static Map<String,Integer> suitmap = new HashMap<>();
 	public static Map<Integer, String > rankings = new HashMap<>();
 	
-	
+	//int b/w 2-14 and suit type (string)
 	public Card(int value,String type){
 		//initialize the card logic 
 		init();
@@ -35,7 +35,11 @@ public class Card{
 		for(String t : Card.facecards){rankings.put(i,t);i--;}
 	}
 	
-	void showMe(){System.out.println(this.rank+" "+this.suit);}
-	
-	
+	void showMe(){
+	    if(this.rank<10){System.out.println(this.rank+" "+this.suit);}
+	    if(this.rank==11){System.out.println("J "+this.suit);}
+	    if(this.rank==12){System.out.println("Q "+this.suit);}
+	    if(this.rank==13){System.out.println("K "+this.suit);}
+	    if(this.rank==14){System.out.println("A "+this.suit);}
+	    }
 }

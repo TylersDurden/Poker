@@ -10,8 +10,9 @@ import java.util.*;
 public class Deck {
 	
 	public final static String [] suitOpts = {"S","H","C","D" };
-	public static Vector<Card> self = new Vector<>();
-	public static Map<Card,Boolean> cardsInPlay = new HashMap<>();
+	public Vector<Card> self = new Vector<>();
+	public Map<Card,Boolean> cardsInPlay = new HashMap<>();
+	
 	
 	public Deck(){
 		//create an initial deck (not shuffled) 
@@ -19,28 +20,34 @@ public class Deck {
 		shuffle();
 	}
 	
-	public static void initializeDeck(){
+	public void initializeDeck(){
 		
 		for(int i=2;i<15;i++){
 			for(String suit : suitOpts){
-				Deck.self.add(new Card(i,suit));
+				self.add(new Card(i,suit));
 			}
 		}
-		System.out.println("Created a deck of "+Deck.self.size()+" cards");
-		for(Card c : Deck.self){cardsInPlay.put(c,false);}
+		//System.out.println("Created a deck of "+self.size()+" cards");
+		for(Card c : this.self){cardsInPlay.put(c,false);}
 	}
 	
-	public static Vector<Card> deal(int nCards){
-	    Deck.shuffle();
+	public Vector<Card> deal(int nCards){
+	    //shuffle();
 	    Vector<Card> hand = new Vector<>();
 	    int dealt = 0;
 	    //If card isnt in play then deal it
-	        for(Card i : Deck.self){
+	        for(Card i : this.self){
 	           if(cardsInPlay.get(i)!=true && hand.size()<nCards){
 	                hand.add(i);
 	                cardsInPlay.put(i,true);
 	                dealt ++;
 	            }
+	           /**if( (dealt<52 && hand.size()<nCards) && cardsInPlay.get(i)!=true ){
+	               dealt++;
+	               hand.add(i);
+	           }
+	            * 
+	            */
 	        }
 	    
 	     /** once cards are dealt make sure deck knows they're in play
@@ -57,8 +64,7 @@ public class Deck {
 	   return hand;
 	}
 	
-	
-	public static void shuffle(){Collections.shuffle(self);}
+	public void shuffle(){Collections.shuffle(self);}
 	
 	public static void main(String[]args){
 	    Deck d = new Deck();

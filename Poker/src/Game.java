@@ -12,56 +12,54 @@ public class Game {
     public static int     STATE   = 0;             //Keep track of moving blinds after each hand
 
     public Game(Dealer deal, Table t, Vector<Player> ps) {
-        System.out.println("- - - - - - - - - - - - - - ");
-        System.out.println("The Game is Texas Hold 'Em.\n" + 
-        "Small Blinds start at 500\n" + "Big Blinds start at 750 ");
-        System.out.println("- - - - - - - - - - - - - - ");
         /** Set up the dealer [house], table and players */
         this.house = deal;
         this.table = t;
         this.players = ps;
-
+        System.out.println("- - - - - - - - - - - - - - ");
+        System.out.println("The Game is Texas Hold 'Em.\n" + 
+        "Small Blinds start at 500\n" + "Big Blinds start at 750 ");
+        System.out.println("- - - - - - - - - - - - - - ");
         //Define the order of play, and whos big blind/small blind 
         anteUp();
         
         /** Deal each player their intial hand */
         Game.Bots = dealHandsToPlayers();
         System.out.println("Each Player Dealt a hand.");
-        AI mac     = new AI(this.players.get(0));
-        AI dennis  = new AI(this.players.get(1));
-        AI charlie = new AI(this.players.get(2));
         
         //Let players decide on checking/betting
         /**TODO:
         Have to add the betting mechanism, but first start
-        figuring out how the bots can first figure out who won.
+        figuring out how the bots can figure out who won.
         Then start to add card counting/deciding how good a hand
         is during game. Finally, use this to influence bots
         betting behavior.*/
         
         // Deal Flop 
         this.table.addCardsToTable(this.house.cards.deal(3));
-        System.out.println("FLOP:");
+        System.out.println("- - - - FLOP - - - - ");
         for(Card c:this.table.tablecards){c.showMe();}
-        mac.reviewTable(this.table.tablecards);
-        dennis.reviewTable(this.table.tablecards);
-        charlie.reviewTable(this.table.tablecards);
+        
         
         // Deal Turn 
         this.table.addCardsToTable(this.house.cards.deal(1));
-        System.out.println("Turn: ");
+        System.out.println("- - - - Turn - - - - ");
         for(Card c:this.table.tablecards){c.showMe();}
-        mac.reviewTable(this.table.tablecards);
-        dennis.reviewTable(this.table.tablecards);
-        charlie.reviewTable(this.table.tablecards);
+        //mac.reviewTable(this.table.tablecards);
+        //dennis.reviewTable(this.table.tablecards);
+        //charlie.reviewTable(this.table.tablecards);
         
         //Deal River
         this.table.addCardsToTable(this.house.cards.deal(1));
-        System.out.println("River: ");
+        System.out.println("- - - - River - - - -  ");
         for(Card c:this.table.tablecards){c.showMe();}
-        mac.reviewTable(this.table.tablecards);
-        dennis.reviewTable(this.table.tablecards);
-        charlie.reviewTable(this.table.tablecards);
+        //mac.reviewTable(this.table.tablecards);
+        //dennis.reviewTable(this.table.tablecards);
+        //charlie.reviewTable(this.table.tablecards);
+         
+        Game.Bots.get(0).reviewTable(this.table.tablecards);
+        Game.Bots.get(1).reviewTable(this.table.tablecards);
+        Game.Bots.get(2).reviewTable(this.table.tablecards);
          
         //Evaluate best hand for players left 
         System.out.println("Who wins?");
@@ -107,8 +105,13 @@ public class Game {
         Vector<AI> bots = new Vector<>();
         for (Player p : this.players) {
             p.getHand(this.house.cards.deal(2));
-            AI bot = new AI(p);
         }
+        AI mac     = new AI(this.players.get(0));
+        AI dennis  = new AI(this.players.get(1));
+        AI charlie = new AI(this.players.get(2));
+        bots.add(mac);
+        bots.add(dennis);
+        bots.add(charlie);
         return bots;
     }
 
