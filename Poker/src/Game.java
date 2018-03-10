@@ -1,8 +1,13 @@
 import java.util.*;
 
 /**
- * GAME
- * 
+ * <GAME>
+ *  ____    ___   _   __  ____   ____
+ * | n  |  | _ | | |/  / |  __| | n  |
+ * | U _|  || || |    /  | |__  | U  /
+ * |  |    ||_|| | |\ \  | ___| | |\ \
+ * |__|    |___| |_| \_\ | |__  |_| \_\
+ ***************************/
  * @author ScottRobbins
  */
 public class Game {
@@ -18,8 +23,9 @@ public class Game {
 		this.table = t;
 		this.players = ps;
 		System.out.println("- - - - - - - - - - - - - - ");
-		System.out
-				.println("The Game is Texas Hold 'Em.\n" + "Small Blinds start at 500\n" + "Big Blinds start at 750 ");
+		System.out.println("The Game is Texas Hold 'Em.\n" +
+		                   "Small Blinds start at 500\n" + 
+		                   "Big Blinds start at 750 ");
 		System.out.println("- - - - - - - - - - - - - - ");
 		// Define the order of play, and whos big blind/small blind
 		anteUp();
