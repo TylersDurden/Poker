@@ -80,8 +80,9 @@ public class AI {
         //private Deck simdeck = new Deck();
         private Map<Integer,Vector<String>> hashdeck = new HashMap<>();
         /** <DataStructures_for_OUTS> */
-        private Map<Card,Vector<Card>> paired  = new HashMap<>();
+        private Map<Card,Vector<Card>> paired = new HashMap<>();
         private Map<Card,Vector<Card>> suited = new HashMap<>();
+        private Map<Card,Vector<Card>> strait = new HashMap<>();
         
         public CardCounter(){
             Vector<Card>testdeck = new Vector<>();
@@ -134,29 +135,32 @@ public class AI {
                 for(Card hcs : hand){hcs.showMe();}
                 //System.out.println(hand.get(0).rank+hand.get(0).suit);
                 if(hand.size()!=2){badhand++;}
+                /** <FLOP> */
                 Vector<Card> flop = simdeck.deal(3);
                 if(flop.size()!=3){badflop++;}
+                /** <TURN> */
                 Vector<Card> turn = simdeck.deal(1);//add turn to table
                 if(turn.size()!=1){badturn++;}
+                /** <RIVER> */
                 Vector<Card> river = simdeck.deal(1);//add river 
                 if(river.size()!=1){badriv++;}
                 Vector<Card> table = createTable(flop,turn,river);
                 if(table.size()!=5){badtab++;}
-                //show hand for debugging
-                //for(Card c:hand){c.showMe();}
+                
                 System.out.println("SHOW TABLE:");
                 for(Card tcs : table){tcs.showMe();}
-                
+                /** Generate Training data so return HAND objects */
                 evaluateHand(hand,table); 
                 i++;
                 simdeck = new Deck();
             }
+            /** Err Report printout
             //System.out.println("* * * {ERROR REPORT} * * *");
             //System.out.println(badhand+" malformed hands out of "+N);
             //System.out.println(badflop+" malformed flops out of "+N);
             //System.out.println(badturn+" malformed turns out of "+N);
             //System.out.println(badriv +" malformed rivers out of "+N);
-            //System.out.println(badtab+ " malformed tables out of "+N);
+            //System.out.println(badtab+ " malformed tables out of "+N);*/
         }
         
         Vector<Card> createTable(Vector<Card>flop,Vector<Card>turn,Vector<Card>river){
@@ -192,8 +196,6 @@ public class AI {
              }
          }
              
-         System.out.println(pairouts.size()+" outs for a pair");
-         System.out.println(flushout.size()+" outs for a flush");
          Vector<Card>pairs = new Vector<>();
          Vector<Card>flushed = new Vector<>();
          
@@ -212,13 +214,26 @@ public class AI {
              if(pairs.size()>0){
                  System.out.println("Pair of "+pairs.get(0).rank);
              }
-             if(flushed.size()>2){
-                 System.out.println("Almost have a flush: "+flushed.get(0).suit);
+             
+         }
+         // Also consider cars on table with themselves! 
+         for(Card t : table){
+             for(Card cs0:table){
+                 if(t.rank==cs0.rank && t.suit.compareTo(cs0.suit)!=0){pairs.add(t); pairs.add(cs0);}
+                 
              }
          }
             
         }   
 
-    } 
+    }
+    
+    /** Generic <HAND> class */
+   public static class HAND {
+       
+       public HAND(Vector<Card>cards){
+           
+       }
+   }
 
 }/** <ENDof_:<<AI><><>*/
