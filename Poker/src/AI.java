@@ -69,7 +69,6 @@ public class AI {
 			System.out.println("Has " + this.flush.size() + " " + this.flush.get(0).suit);
 		}
 	}
-   /**@deprecated */
 	void reviewTable(Vector<Card> dealt) {
 		System.out.println("---[" + this.name + " reviews hand]---");
 
@@ -147,14 +146,14 @@ public class AI {
 		public void run() {
 
 			int i = 0;// Trial Number
-			int N = 2;// N Trials
+			int N = 1;// N Trials
 			int badhand = 0;
 			int badflop = 0;
 			int badturn = 0;
 			int badriv = 0;
 			int badtab = 0;
 			Deck simdeck = new Deck();
-
+/////////////////////////////////////////////////////////////////////////////
 			while (i < N) {
 				Vector<Card> hand = simdeck.deal(2);
 				// System.out.println("HAND:");
@@ -165,24 +164,23 @@ public class AI {
 					CardCounter.h =
 					   new HAND(hand, this.paired, this.suited,this.strait);
 				}
-				// Sleep is to ensure printout happens
-				try {Thread.sleep(10);
-				} catch (InterruptedException e) {}
+				// Sleep is to ensure debug printout happens
+				
 				/** <FLOP> */
 				Vector<Card> flop = simdeck.deal(3);
 				if (flop.size() != 3) {
 					badflop++;
 				} else {
 					HAND.modifyTable(flop);
-				try {Thread.sleep(10);
-				} catch (InterruptedException e) {}	
+				    try {Thread.sleep(10);
 				    System.out.println("FLOP:");
 				    for(Card flps : flop){flps.showMe();}
+				    } catch (InterruptedException e) {}	
 					Map<String,Vector<Card>> odds = HAND.selfEval();
 					//DEBUG Prinouts 
 					if(odds.get("straight").size()>=3){
 					    System.out.println("Possible Straight?:");
-					    for(Card s : odds.get("straight")){s.showMe();}
+					    for(Card s : HAND.removeRepeats(odds.get("straight"))){s.showMe();}
 					}
 					if(odds.get("flush").size()>=3){
 					    System.out.println("Possible Flush?:");
@@ -197,6 +195,11 @@ public class AI {
 				} else {
 					HAND.modifyTable(createTable(flop, turn, new Vector<Card>()));
 					//HAND.selfEval();
+                    try{/** <DEBUG_PrintOut> */
+                        System.out.println("TURN:");
+                        Thread.sleep(2);
+					   for(Card tcs : HAND.table){tcs.showMe();}}
+					catch(InterruptedException e){}
 				}/** <RIVER> */
 				Vector<Card> river = simdeck.deal(1);// add river
 				if (river.size() != 1) {
@@ -207,23 +210,23 @@ public class AI {
 					badtab++;
 				} else {
 					HAND.modifyTable(table);
-				    //HAND.selfEval();
+				  
+				    try{/**<DEBUG_PrintOut>*/
+				        System.out.println("RIVER:");
+				        Thread.sleep(2);
+				        for(Card c : table){c.showMe();}
+				        System.out.println(" Final Hand? ");
+				         //HAND.selfEval(); 
+				    }catch(InterruptedException E){}
 				}
 				i++;
 				simdeck = new Deck();
 			}
 
 		}
-		/**
-		 * Err Report printout System.out.println("* * * {ERROR REPORT} * * *");
-		 * System.out.println(badhand+" malformed hands out of "+N);
-		 * System.out.println(badflop+" malformed flops out of "+N);
-		 * System.out.println(badturn+" malformed turns out of "+N);
-		 * System.out.println(badriv +" malformed rivers out of "+N);
-		 * System.out.println(badtab+ " malformed tables out of "+N);
-		 */
+//////////////////////////////////////////////////////////////////////	
 
-		Vector<Card> createTable(Vector<Card> flop, Vector<Card> turn, Vector<Card> river) {
+		Vector<Card> createTable(Vector<Card>flop, Vector<Card>turn, Vector<Card> river) {
 			Vector<Card> table = new Vector<>();
 			for (Card f : flop) {
 				table.add(f);
@@ -274,14 +277,14 @@ public class AI {
 			suits = suited;
 			strtopts = straight;
 			// Determine potential hands already, and outs to look for
-			inthePocket();
+			inthePocket();/** Initialze Cards in the Pocket */
 			System.out.print(HAND.flushout.size() + " outs for a flush and "+
 			HAND.straightout.size()+" straight outs and ");
-			
-			System.out.println(HAND.pairouts.size() + " pair outs possible for Hand: ");
-			for (Card cahd : HAND.holding) {
-				cahd.showMe();
-			}
+			try{Thread.sleep(2);
+			    System.out.println(HAND.pairouts.size() + 
+			            " pair outs possible for Hand: ");
+			for (Card cahd : HAND.holding) {cahd.showMe();}
+			}catch(InterruptedException e){}
 		}
 
 		void inthePocket() {
@@ -358,63 +361,43 @@ public class AI {
 		    Vector<Card>suits = new Vector<>();
 		    Vector<Card>tres = new Vector<>();
 		    Vector<Card>line = new Vector<>();
-		    if(pocketpair){//both cards in hand have the same rank
-		        for(Card c : table){//what about cards on table?
-		            if(c.rank == HAND.holding.get(0).rank){
-		                tres.add(HAND.holding.get(0));tres.add(c);}
-		            if(Math.abs(c.rank - HAND.holding.get(0).rank)<=4){
-		                line.add(c);
-		                line.add(HAND.holding.get(0));
-		            }
-		        }
-		    }else{
-		        for(Card c : table){
-		            //check for picked up pairs
-		            if(c.rank == HAND.holding.get(0).rank){
-		                pair.add(c); pair.add(HAND.holding.get(0));
-		            }
-		            if(c.rank == HAND.holding.get(1).rank){
-		                pair.add(c); pair.add(HAND.holding.get(1));
-		            }
-		            //Now check table for common pairs
-		            for(Card d : table){
-		                if(d.rank==c.rank && (d.suit.compareTo(c.suit)!=0)){
-		                    pair.add(d); pair.add(c);
-		                }
-		            }
-		        }
-		        //Now use the Outs for checking more complicated hands w table
-		        for(Map.Entry<Card,Vector<Card>>entry:strtopts.entrySet()){
-		            if(entry.getKey().rank==HAND.holding.get(0).rank && 
-		            entry.getKey().suit.compareTo(HAND.holding.get(0).suit)==0){
-		                //Now check if any outs for this card are on table
-		                for(Card e : entry.getValue()){
-		                    for(Card f : table){
-		                        if(e.rank==f.rank &&e.suit.compareTo(f.suit)==0){
-		                            line.add(e);
-		                            line.add(entry.getKey());}
-		                    }
-		                }
-		            }//Now do the same for the second card in hand
-		            if(entry.getKey().rank==HAND.holding.get(1).rank && 
-		            entry.getKey().suit.compareTo(HAND.holding.get(1).suit)==0){
-		                 //Any of this card's outs on the table? 
-		                 for(Card g : entry.getValue()){// any g == h? 
-		                     for(Card h : table){
-		                         if(g.rank==h.rank && g.suit.compareTo(h.suit)==0){
-		                             line.add(g);
-		                             line.add(entry.getKey());
-		                         }
-		                     }
-		                 }
-		            }
-		        }// Now, same thing for flush-out Map and table/hand 
-		        
-		        
-		    }
 		    /** Clean up the different possible hands for any repeats*/
 		    Vector<Card>pears = removeRepeats(pair);
-		    
+		    /**
+		     * Essentially just looking through the pairouts, suitouts, etc.
+		     * vectors and see if any of them are on table. If a card from
+		     * outs is there, add it to the corresponding vec of the Map
+		     * map corresponding to that hand. This way, every time 
+		     * selfEval() is called when new cards are on table, new potential
+		     * hands are saved, and by effect the likelihood of hitting hands
+		     * becomes more clear.  
+		     */
+		    for(Map.Entry<Card,Vector<Card>>entry:HAND.popts.entrySet()){
+		        if(entry.getKey().rank==HAND.holding.get(0).rank && 
+		        (entry.getKey().suit.compareTo(HAND.holding.get(0).suit)==0)){
+		            for(Card crd : entry.getValue()){
+		                for(Card tbl : HAND.table){
+		                    if(tbl.rank==crd.rank && tbl.suit.compareTo(crd.suit)==0){
+		                        pair.add(tbl);
+		                    }
+		                }
+		            }
+		        }//Same thing for second card in hand 
+		        if(entry.getKey().rank==HAND.holding.get(1).rank && 
+		        (entry.getKey().suit.compareTo(HAND.holding.get(1).suit)==0)){
+		            for(Card caRd : entry.getValue()){
+		                for(Card tab:HAND.table){
+		                    if(tab.rank==caRd.rank &&tab.suit.compareTo(caRd.suit)==0){
+		                        pair.add(tab);
+		                    }
+		                }
+		            }
+	           }
+		    }/** Now check for <FLUSH> outs. Use same algo as above */
+		   for(Map.Entry<Card,Vector<Card>>entry:HAND.suits.entrySet()){
+		       
+		   }
+		   
 		    
             hands.put("pair",pair);
             hands.put("trips",tres);
@@ -431,10 +414,30 @@ public class AI {
 			return besthand;
 		}
 		
-		static Vector<Card> removeRepeats(Vector<Card>vec){
-		   Vector<Card>cleaned = new Vector<>();
-		    
-		    return cleaned;
+		static Vector<Card> removeRepeats(Vector<Card>VEC){
+		   Vector<Card>out = new Vector<Card>();
+		   Map<Integer,Card>vec = new HashMap<>();
+		   int i = 0;
+		   for(Card c : VEC){
+		       vec.put(i,c);
+		       i++;
+		   }
+		   i=0;
+		   List<Integer>ind = new ArrayList(vec.keySet());
+		   Vector<Integer> removals = new Vector<>();
+		   Collections.shuffle(ind);
+		   for(Card crd : VEC){
+		       for(Integer index : ind){
+		           if(vec.get(index).rank==crd.rank &&
+		           vec.get(index).suit.compareTo(crd.suit)==0){
+		               removals.add(i);
+		           }
+		       }
+		       i++;
+		   }
+		   for(Integer indice : removals){VEC.remove(indice);}
+		   
+		   return VEC;
 		}
 
 	}/** EndOfHAND*/

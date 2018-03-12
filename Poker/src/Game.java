@@ -7,7 +7,7 @@ import java.util.*;
  * | U _|  || || |    /  | |__  | U  /
  * |  |    ||_|| | |\ \  | ___| | |\ \
  * |__|    |___| |_| \_\ | |__  |_| \_\
- ***************************/
+ ***************************
  * @author ScottRobbins
  */
 public class Game {
@@ -51,20 +51,16 @@ public class Game {
 
 		// Deal Turn
 		this.table.addCardsToTable(this.house.deal(1));
-		System.out.println("- - - - Turn - - - - ");
-		for (Card c : this.table.tablecards) {
-			c.showMe();
-		}
+		//System.out.println("- - - - Turn - - - - ");
+		
 		// mac.reviewTable(this.table.tablecards);
 		// dennis.reviewTable(this.table.tablecards);
 		// charlie.reviewTable(this.table.tablecards);
 
 		// Deal River
 		this.table.addCardsToTable(this.house.deal(1));
-		System.out.println("- - - - River - - - -  ");
-		for (Card c : this.table.tablecards) {
-			c.showMe();
-		}
+		//System.out.println("- - - - River - - - -  ");
+		
 		// mac.reviewTable(this.table.tablecards);
 		// dennis.reviewTable(this.table.tablecards);
 		// charlie.reviewTable(this.table.tablecards);
@@ -75,6 +71,9 @@ public class Game {
 
 		// Evaluate best hand for players left
 		System.out.println("Who wins?");
+		try{Thread.sleep(10);}
+		catch(InterruptedException e){}
+		for(Card last : this.table.tablecards){last.showMe();}
 	}
 
 	void anteUp() {
