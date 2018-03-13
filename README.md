@@ -1,20 +1,25 @@
 # Poker
-Command Line Poker game 
+Command Line Texas Hold 'em  [Under Development]
 
-# Development Status
-Just started this project, so it's currently under development. Initial gameplay is being worked on. 
-Initially the game will run as a poker game between bots alone. Once this works, hopefully the bots
-can be trained by running several games against each other before allowing the user to join. 
+## Game Play (*Quick Hold 'em Overview*)
+User will play up to 3 bots at a time. Each player begins with the same 5000
+chips. After every player chooses to buy in (and eventually if I get to it,
+have big/small blinds) a round of betting, checking or folding occurs. 
 
-The maximum table size will be 4 players. This can be either a table of 4 bots, or a table with
-one real user and 3 bots. 
+Three cards, called the flop, are dealt to the table. These cards are common
+to ** all** players. After an additional round of player actions, a fourth 
+card is dealt to the table. Again, each player at the table is given the choice
+of checking, betting or folding. Finally, a fifth card called the River is 
+dealt to the table. After the final round of bets the players show their cards
+and the winner takes all. 
 
-## AI Strategy 
-When a bot is dealt a hand, a map of all of the outs for any given
-poker hand is contructed and the outs matching the cards the bot is holding 
-are isolated. 
+In the case of a tie the **pot** (sum of all bets made during round) is split
+between players. 
 
-This way, when more cards are dealt, the program has relatively few cards it
-knows will complete a given hand. 
 
-This makes up the logical skeleton of the Poker Bot AI. 
+## AI Development Strategy 
+There are a finite number of cards, and a finite possible combination of cards
+that make up all the valid states of every poker hand. This is great because
+it means that the end goal of finding the best possible hand from a Bot's two
+pocket cards, and the 5 table cards can be modeled as a series of Markov state
+transitions [initial hands, the flop, turn and river].  
