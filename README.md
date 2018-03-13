@@ -7,7 +7,7 @@ chips. After every player chooses to buy in (and eventually if I get to it,
 have big/small blinds) a round of betting, checking or folding occurs. 
 
 Three cards, called the flop, are dealt to the table. These cards are common
-to ** all** players. After an additional round of player actions, a fourth 
+to **all** players. After an additional round of player actions, a fourth 
 card is dealt to the table. Again, each player at the table is given the choice
 of checking, betting or folding. Finally, a fifth card called the River is 
 dealt to the table. After the final round of bets the players show their cards
