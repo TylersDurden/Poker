@@ -12,11 +12,16 @@ public class AI {
 
 	public static Vector<Card> hand = new Vector<>();
 
-	public Vector<Card> highest = new Vector<>();
-	public Vector<Card> pair = new Vector<>();//
-	public Vector<Card> twopair = new Vector<>();//
-	public Vector<Card> tres = new Vector<>();// Three of a Kind
-	public Vector<Card> flush = new Vector<>();//
+	public static Vector<Card> highest   = new Vector<>();
+	public static Vector<Card> pair      = new Vector<>();
+	public static Vector<Card> twopair   = new Vector<>();
+	public static Vector<Card> threekind = new Vector<>();
+	public static Vector<Card> flush     = new Vector<>();
+	public static Vector<Card> straight  = new Vector<>();
+	public static Vector<Card> fullhouse = new Vector<>(); 
+	public static Vector<Card> sflush    = new Vector<>();
+	public static Vector<Card> quads     = new Vector<>();
+	public static Vector<Card> rylflush  = new Vector<>();
 
 	public String name;
 
@@ -26,9 +31,7 @@ public class AI {
 		/** Display the player's name and hand */
 		System.out.println("- - - - - [AI] - - - - -");
 		System.out.print(bot.player + " has:\n");
-		for (Card c : bot.hand) {
-			c.showMe();
-		}
+		//for (Card c : bot.hand) {c.showMe();}
 		/** Initialize this bot's AI for the hand it holds */
 		init(bot.hand);
 
@@ -78,7 +81,10 @@ public class AI {
 	 * best way to represent a hand.
 	 */
 	public static void main(String[] args) {
-		new CardCounter();
+		if(args.length>0){
+		    
+		}
+		else{new CardCounter(0);}
 	}
  /**
   * CardCounter is how all the potentials outs for every given card in a 
@@ -98,9 +104,13 @@ public class AI {
 		private Map<Card, Vector<Card>> suited = new HashMap<>();
 		private Map<Card, Vector<Card>> strait = new HashMap<>();
 		private static HAND h;
+		
+		public int BATCH_SIZE;
 
         /** Construct CardCounter*/
-		public CardCounter() {
+		public CardCounter(int trainingDataBatchSize) {
+		    if(trainingDataBatchSize<=0){this.BATCH_SIZE=1;}
+		    else{this.BATCH_SIZE=trainingDataBatchSize;}
 			Vector<Card> testdeck = new Vector<>();
 			// Create the HashDeck
 			for (int i = 2; i < 15; i++) {
@@ -111,7 +121,7 @@ public class AI {
 				}
 				hashdeck.put(i, sopts);
 			}
-			System.out.println("CardCounter TestDeck initialized with " + testdeck.size() + " cards");
+			//System.out.println("CardCounter TestDeck initialized with " + testdeck.size() + " cards");
 
 			Vector<Card> randeck = new Deck().self;
 			for (Card h : testdeck) {
@@ -138,7 +148,6 @@ public class AI {
 		public void run() {
 
 			int i = 0;// Trial Number
-			int N = 1;// N Trials
 			int badhand = 0;
 			int badflop = 0;
 			int badturn = 0;
@@ -146,7 +155,7 @@ public class AI {
 			int badtab = 0;
 			Deck simdeck = new Deck();
 /////////////////////////////////////////////////////////////////////////////
-			while (i < N) {
+			while (i < this.BATCH_SIZE) {
 			    /** Deal a <HAND>*/
 				Vector<Card> hand = simdeck.deal(2);
 				if (hand.size() != 2) {badhand++;}
@@ -159,47 +168,19 @@ public class AI {
 				/** <FLOP> */
 				Vector<Card> flop = simdeck.deal(3);
 				if(flop.size() != 3){badflop++;}
-				else {
-					h.modifyTable(flop);
-				    h.selfEval(hand);
-				    try {Thread.sleep(10);
-				    System.out.println("FLOP:");
-				    for(Card flps : flop){flps.showMe();}
-				    } catch (InterruptedException e) {}	
-					}
-					
+				else {h.modifyTable(flop);}
 					
 				/** <TURN> */
 				Vector<Card> turn = simdeck.deal(1);// add turn to table
-				if (turn.size() != 1) {
-					badturn++;
-				} else {
-					h.modifyTable(createTable(flop,turn));
-					Map<String,Vector<Card>> odds = h.selfEval(hand);
-                    try{/** <DEBUG_PrintOut> */
-                        System.out.println("TURN:");
-                        Thread.sleep(2);
-					   for(Card tcs : h.table){tcs.showMe();}}
-					catch(InterruptedException e){}
-				}/** <RIVER> */
+				if (turn.size() != 1) {badturn++;}
+				else {flop.add(turn.get(0));h.modifyTable(flop);}
+				/** <RIVER> */
 				Vector<Card> river = simdeck.deal(1);// add river
-				if (river.size() != 1) {
-					badriv++;
-				}flop.add(turn.get(0));
+				if (river.size() != 1){badriv++;}
 				Vector<Card> table = createTable(flop, river);
-				if (table.size() != 5) {
-					badtab++;
-				} else {
-					h.modifyTable(table);
-				  
-				    try{/**<DEBUG_PrintOut>*/
-				        System.out.println("RIVER:");
-				        Thread.sleep(2);
-				        for(Card c : table){c.showMe();}
-				        System.out.println(" Final Hand? ");
-				        Vector<Card> besthand = new Evaluation(h.holding,h.table).besthand;
-				    }catch(InterruptedException E){}
-				}
+				if (table.size() != 5) {badtab++;
+				} else {h.modifyTable(table);}
+				
 				i++;
 				simdeck = new Deck();
 			}
@@ -253,7 +234,7 @@ public class AI {
 			strtopts = straight;
 			// Determine potential hands already, and outs to look for
 			inthePocket();/** Initialze Cards in the Pocket */
-			for (Card cahd : HAND.holding) {cahd.showMe();}
+			//for (Card cahd : HAND.holding) {cahd.showMe();}
 		}
 
 		void inthePocket() {
@@ -272,7 +253,7 @@ public class AI {
 				for(Card c : pp){pp.add(c);}
 				this.besthand.put("pair",pp);
 			}
-			if (pocketpair) {System.out.println("Pocket Pair!");} // only for debug
+			if (pocketpair) {pocketpair=true;} // only for debug
 			else {
 				for (Map.Entry<Card, Vector<Card>> entry : popts.entrySet()) {
 					// pair outs for first card in hand
@@ -349,13 +330,16 @@ public class AI {
 		          }
 		        }
 		        if(cr.rank==holds.get(1).rank && cr.suit.compareTo(holds.get(1).suit)==0){
-		          if(pocketpair!=true){
-		              for(Card out : popts.get(cr)){pair.add(out);}}
+		          if(pocketpair){popts.get(cr).remove(cr);tres = popts.get(cr);}
+		          else{for(Card out : popts.get(cr)){pair.add(out);}}
 		          for(Card out : suits.get(cr)){suite.add(out);}
                   if(holds.get(0).rank<holds.get(1).rank){
                       for(Card out : strtopts.get(cr)){line.add(out);}}
                   }		        
 		        }
+		        
+		        
+		        
 		    int ncards = 50-table.size();
 		    double pairodd = (double)pair.size()/ncards*100;
 		    double suitodd = (double)suite.size()/ncards*100;
@@ -367,12 +351,25 @@ public class AI {
 		    System.out.println("["+
 		    pairodd+"% pair] ["+suitodd+"% flush] ["+strtodd+"% straight]");
             hands.put("pair",pair);
-            hands.put("trips",tres);
             hands.put("flush",suite);
             hands.put("straight",line);
             /** Check table to see if any outs are hit */
             if(table.size()>0){
-                
+                for(Card card : table){
+                    for(Card out : pair){//check for a pair
+                        if(pocketpair){//check three of a kind isntead
+                            HAND.pair=true;
+                            if(card.rank==holds.get(0).rank){trips = true;}
+                        } 
+                        if(pocketpair==false && card.rank==out.rank && 
+                           card.suit.compareTo(out.suit)==0){
+                               HAND.pair = true;}
+                    }//
+                    for(Card out : suite){
+                        
+                    }
+                    
+                }
             }
             
             return hands;   
@@ -416,7 +413,6 @@ public class AI {
 	
 	public static class Evaluation implements Runnable{
 	    
-	    Vector<Card> besthand = new Vector<>();
 	    /**___________________________________________
 	     *|<HAND>|<OUTS>|<HIT>|<Y/N?>|<weighted_score>|
          *|------|------|-----|------|----------------|
@@ -430,6 +426,7 @@ public class AI {
 	     */
 	    Map<String,Vector<Integer>> mastertable = new HashMap<>();
 	    Map<Integer,String>  handref     = new HashMap<>();
+	    Vector<Card> besthand = new Vector<>();
 	    
 	    public static final String [] HANDS = {"highest","pair","twopair",
 	                                           "threekind","straight","flush",

@@ -137,6 +137,16 @@ public class Game {
 	}
 
 	public static void main(String[] args) {
+	    System.out.println("****************************************");
+	    System.out.println("*  ____    ___   _   __  ____   ____   *");
+	    System.out.println("* | n  |  | _ | | |/  / |  __| | n  |  *");
+	    System.out.println("* | U _|  || || |    /  | |__  | U  /  *");
+	    System.out.println("* |  |    ||_|| | |\\ \\  | ___| | |\\ \\  *");
+	    System.out.println("* |__|    |___| |_| \\_\\ | |__  |_| \\_\\ *");
+	    System.out.println("*  - - - - - - - - - - - - - - - - -   *");
+	    System.out.println("****************************************");
+	    
+	    
 		if (args.length < 1) { // Args should be a player name
 			System.out.println("< RUNNING: [Simulation-Mode] >");
 

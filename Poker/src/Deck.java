@@ -59,9 +59,7 @@ public class Deck {
 	            }
 	        }
 	    }*/
-	    
-	    
-	   return hand;
+ 	   return hand;
 	}
 	
 	public void shuffle(){Collections.shuffle(self);}

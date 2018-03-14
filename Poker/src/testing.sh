@@ -1,3 +1,3 @@
-#!/bin/bash
-javac AI.java
+#!/usr/bin/env bash
+javac -Xlint:unchecked AI.java
 java AI
