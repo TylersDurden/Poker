@@ -36,10 +36,10 @@ public class Card{
 	}
 	
 	void showMe(){
-	    if(this.rank<10){System.out.println(this.rank+" "+this.suit);}
-	    else if(this.rank==11){System.out.println("J "+this.suit);}
-	    else if(this.rank==12){System.out.println("Q "+this.suit);}
-	    else if(this.rank==13){System.out.println("K "+this.suit);}
-	    else if(this.rank==14){System.out.println("A "+this.suit);}
+	    if(this.rank<10){System.out.print(this.rank+" "+this.suit);}
+	    else if(this.rank==11){System.out.print("J "+this.suit);}
+	    else if(this.rank==12){System.out.print("Q "+this.suit);}
+	    else if(this.rank==13){System.out.print("K "+this.suit);}
+	    else if(this.rank==14){System.out.print("A "+this.suit);}
 	    }
 }

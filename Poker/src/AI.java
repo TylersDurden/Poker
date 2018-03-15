@@ -1,4 +1,6 @@
 import java.util.*;
+import java.nio.file.*;
+import java.io.*;
 
 /**
  * AI - Brains for the game
@@ -173,7 +175,7 @@ public class AI {
 				/** <TURN> */
 				Vector<Card> turn = simdeck.deal(1);// add turn to table
 				if (turn.size() != 1) {badturn++;}
-				else {flop.add(turn.get(0));h.modifyTable(flop);}
+				else {h.modifyTable(flop);}
 				/** <RIVER> */
 				Vector<Card> river = simdeck.deal(1);// add river
 				if (river.size() != 1){badriv++;}
@@ -181,11 +183,58 @@ public class AI {
 				if (table.size() != 5) {badtab++;
 				} else {h.modifyTable(table);}
 				
+				/** TODO: 
+				FOR Generating Training Data, this would be the best point 
+				to dump the data from the round to a .csv 
+				 * 
+				 */
+				try{
+				    saveRoundData(hand,flop,turn,river);
+				    Thread.sleep(1);
+				}catch(InterruptedException e){}
 				i++;
 				simdeck = new Deck();
 			}
 
 		}
+		
+		/** */
+	    void saveRoundData(Vector<Card>hand,Vector<Card>flop,
+		                   Vector<Card>turn,Vector<Card>river){
+		    String td = "training.txt";
+		    
+		    BufferedWriter bw = null;
+		    String STATE0 = String.valueOf(hand.get(0).rank)+hand.get(0).suit+" "+
+		                    String.valueOf(hand.get(1).rank)+hand.get(1).suit;
+		    String STATE1 = "";
+		    for(Card f : flop){
+		        STATE1 += String.valueOf(f.rank)+f.suit+" ";
+		    }
+		    String STATE2 = "";
+		    flop.add(turn.get(0));
+		    for(Card g : flop){
+		        STATE2 += String.valueOf(g.rank)+g.suit+" ";
+		    }
+		    String STATE3 = "";
+		    flop.add(river.get(0));
+		    for(Card h : flop){
+		        STATE3 += String.valueOf(h.rank)+h.suit+" ";
+		    }
+		    String trainingdata = STATE0+","+STATE1+","+STATE2+","+STATE3;
+		    System.out.println(trainingdata);
+		    /**try{//inst writing to file
+		    Thread.sleep(5);
+		    bw = new BufferedWriter(
+		         new FileWriter(
+		         Paths.get(System.getProperty("user.dir"),td).toFile(),true));
+            bw.write(trainingdata);
+            }catch(IOException e){e.printStackTrace();}
+            catch(InterruptedException e){}
+
+		     * 
+		     */
+
+		}		
 //////////////////////////////////////////////////////////////////////	
         /** Update Table */
 		Vector<Card> createTable(Vector<Card>flop, Vector<Card>more) {
