@@ -23,3 +23,12 @@ that make up all the valid states of every poker hand. This is great because
 it means that the end goal of finding the best possible hand from a Bot's two
 pocket cards, and the 5 table cards can be modeled as a series of Markov state
 transitions [initial hands, the flop, turn and river].  
+
+# Creating Training Data 
+Using the AI class I generate large samples of training data, containing 4 states.
+The first being the two cards dealt to a player, the second is the flop, the third 
+the turn and the fourth the river and the whole table. The values are comma separated,
+and saved into the training.txt file. 
+
+# Processing the Data
+[Next step of Development]
