@@ -10,7 +10,7 @@ public class Card{
 	
 	public String suit;
 	public int rank;
-	public static final String [] types= {"spades","hearts","clubs","diamonds"};
+	public static final String [] types= {"S","H","C","D"};
 	public static final String [] facecards = {"Ace","King","Queen","Jack"};
 	
 	public static Map<String,Integer> suitmap = new HashMap<>();
