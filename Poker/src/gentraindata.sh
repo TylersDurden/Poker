@@ -9,3 +9,5 @@ echo 'Simulating 1000 Poker Hands'
 echo 'Finished Generating Training Data.'
 echo 'Results dumped into training.txt'
 javac Neuron.java 
+# Label the Training Data/Begin Learning of Hand Classification 
+java Neuron training.txt

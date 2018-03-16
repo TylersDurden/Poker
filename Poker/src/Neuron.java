@@ -1,7 +1,9 @@
 /** NEURON.java */
 import java.util.*;
 import java.io.*;
+
 import java.nio.file.*;
+import java.util.regex.*;
 
 /**<NEURON>
  * Classify and label the training set, by teaching program
@@ -15,37 +17,76 @@ public class Neuron {
     public final int S2_size = 4;
     public final int S3_size = 5;
     
+    public int SIZE;
+    public Vector<Card> SELF = new Vector<>();
+    public Map<Card,Vector<Card>> OUTS = new HashMap<>();
+    
+    
     public Neuron(String cards){
         int length_classifier = cards.split(" ").length;
         switch(length_classifier){
             case(S0_size):
-                prepSTATE0Neurons(cards);
+                prepSTATE0Neuron(cards.split(" "));
+                this.SIZE = S0_size;
                 break;
             case(S1_size):
-                prepSTATE1Neurons(cards);
+                prepSTATE1Neuron(cards.split(" "));
+                this.SIZE = S1_size;
                 break;
             case(S2_size):
-                prepSTATE2Neurons(cards);
+                prepSTATE2Neuron(cards.split(" "));
+                this.SIZE = S2_size;
                 break;
             case(S3_size):
-                prepSTATE3Neurons(cards);
-                break
+                prepSTATE3Neuron(cards.split(" "));
+                this.SIZE = S3_size;
+                break;
             default:
                 break;
         }
         /**Once all the Neurons are Prepped...<ACTIVATE>!*/ 
-
-
     }
-    
     /** <Instantiate_PreFlop_Neurons> */
-        void prepSTATE0Neuron(String cards){}
+        void prepSTATE0Neuron(String [] cards){
+            // What Matters for pre-flop conditions?
+            createSelfInstance(cards);
+            new Perceptron(this.SELF);
+        }
         /** <Instantiate_Flop_Neurons> */
-        void prepSTATE1Neuron(){}
+        void prepSTATE1Neuron(String [] cards){
+            //Whats important about flop?
+            createSelfInstance(cards);
+            new Perceptron(this.SELF);
+        }
         /** <Instantiate_Turn_Neurons> */
-        void prepSTATE2Neuron(){}
+        void prepSTATE2Neuron(String [] cards){
+            //What happens at the turn?
+            createSelfInstance(cards);
+            new Perceptron(this.SELF);
+        }
         /** <Instantiate_Table_Neurons> */
-        void preSTATE3Neuron(){}
+        void prepSTATE3Neuron(String [] cards){
+            //What are the results at STATE3?
+            createSelfInstance(cards);
+            new Perceptron(this.SELF);
+        }
+        
+        /** <Instantiate_the_SELF_Vector> */
+        void createSelfInstance(String [] cards){
+            for(String card : cards){
+                int rank = (int)(extract(card));
+                String suit = card.split(String.valueOf(rank))[1];
+                this.SELF.add(new Card(rank,suit));
+            }
+        }
+        
+        /** <Extract> double from input String */
+        double extract(String str) {
+            Double dig = 0.0;
+            Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(str);
+            while (m.find()){return Double.parseDouble(m.group(1));}
+            return dig;
+        }
 
     
 
@@ -68,6 +109,11 @@ public class Neuron {
             System.out.println(NEURONS1.size()+" STATE1 Neurons Instantiated");
             System.out.println(NEURONS2.size()+" STATE2 Neurons Instantiated");
             System.out.println(NEURONS3.size()+" STATE3 Neurons Instantiated");
+            //Take a peek at first set of states for debugging 
+            //for(Card c : NEURONS3.get(0).SELF){c.showMe();}
+            
+            
+            
            }
         }
     
@@ -125,5 +171,47 @@ public class Neuron {
         
         
   }/**<EndOf_TrainingDataPipeLine>*/
+ 
+  /** <PERCEPTRON:> 
+   * 
+   */
+  public static class Perceptron {
+      
+      //For each Rank, how many diff cards with this rank are present?
+      public Map<Integer,Integer> rankedBinCounts = new HashMap<>(); 
+      //For each Suit, how many diff cards with same suit are present?
+      public Map<String, Integer> suitedBinCounts = new HashMap<>();
+      //For each Rank, how many diff cards present build a straight? 
+      public Map<Integer,Integer> straitBinCounts = new HashMap<>();
+      
+      //Contruct Perceptron
+      public Perceptron(Vector <Card> cardsIn){
+          /** Keep this as Generic as possible */
+          //For following: If Cards aren't same record distinctions
+          //Compare Ranks
+          this.rankedBinCounts = rankCheck(cardsIn);
+          //Compare Suits
+          this.suitedBinCounts = suitCheck(cardsIn);
+          //Proximity check
+          this.straitBinCounts = nearCheck(cardsIn);
+      }
+      
+      Map<Integer,Integer> rankCheck(Vector<Card>cards){
+          Map<Integer,Integer> rankoutfound = new HashMap<>();
+          return rankoutfound;
+      }
+      
+      Map<String,Integer> suitCheck(Vector<Card>cards){
+          Map<String,Integer> suitoutfound = new HashMap<>();
+          return suitoutfound;
+      }
+      
+      Map<Integer,Integer> nearCheck(Vector<Card>cards){
+          Map<Integer,Integer> strtoutfound = new HashMap<>();
+          return strtoutfound;
+      }
+      
+      
+  }/** <EndOf_PERCEPTRON>*/ 
  
 }/**<EndOf_NEURON>*/

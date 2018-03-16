@@ -30,5 +30,18 @@ The first being the two cards dealt to a player, the second is the flop, the thi
 the turn and the fourth the river and the whole table. The values are comma separated,
 and saved into the training.txt file. 
 
-# Processing the Data
-[Next step of Development]
+# Pre-Processing the Data
+First the training data is labeled with a classification class written in Java 
+called Neuron. This classifier is unsupervised, and will likely become relevant
+again downstream. For now it simply labels the training data. 
+
+After passing through Neuron, the training data has been properly labeled and is
+therefore ready a more complicated Neural Network structure that will be written 
+in Python.
+
+# Learning From Training Data
+The goal is that by providing a network with a very large set of 4 consecutive 
+sequences of Cards, with a final logical outcome label, the intent is to create
+an ability to use Decision Trees and AutoEncoding to select favorable actions 
+at any given state (based on the learned knowledge of which decisions are best). 
+

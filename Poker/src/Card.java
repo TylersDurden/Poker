@@ -21,9 +21,10 @@ public class Card{
 		//initialize the card logic 
 		init();
 		//assign the card fields
-		if(value>14 || value<2){System.out.println("INVALID CARD RANK");}
+		if(value>14 || value<2){System.out.println("INVALID CARD RANK: "+value);}
 		else{this.rank = value;}
-		this.suit = types[suitmap.get(type)];
+		try{this.suit = types[suitmap.get(type)];}
+		catch(NullPointerException e){System.out.println("BAD SUIT: "+type);}
 		
 	}
 	
@@ -37,9 +38,9 @@ public class Card{
 	
 	void showMe(){
 	    if(this.rank<10){System.out.print(this.rank+" "+this.suit);}
-	    else if(this.rank==11){System.out.print("J "+this.suit);}
-	    else if(this.rank==12){System.out.print("Q "+this.suit);}
-	    else if(this.rank==13){System.out.print("K "+this.suit);}
-	    else if(this.rank==14){System.out.print("A "+this.suit);}
+	    else if(this.rank==11){System.out.print("J"+this.suit+" ");}
+	    else if(this.rank==12){System.out.print("Q"+this.suit+" ");}
+	    else if(this.rank==13){System.out.print("K"+this.suit+" ");}
+	    else if(this.rank==14){System.out.print("A"+this.suit+" ");}
 	    }
 }
