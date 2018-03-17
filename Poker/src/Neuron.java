@@ -1,7 +1,6 @@
 /** NEURON.java */
 import java.util.*;
 import java.io.*;
-
 import java.nio.file.*;
 import java.util.regex.*;
 
@@ -17,13 +16,18 @@ public class Neuron {
     public final int S2_size = 4;
     public final int S3_size = 5;
     
+    public Perceptron selfconv;
+    public static int DEPTH;
+    
     public int SIZE;
     public Vector<Card> SELF = new Vector<>();
     public Map<Card,Vector<Card>> OUTS = new HashMap<>();
-    
+    public static Vector<Vector<Card>> STATES = new Vector<>();
+    public boolean RESET = false;
     
     public Neuron(String cards){
         int length_classifier = cards.split(" ").length;
+        this.DEPTH=0;
         switch(length_classifier){
             case(S0_size):
                 prepSTATE0Neuron(cards.split(" "));
@@ -45,30 +49,35 @@ public class Neuron {
                 break;
         }
         /**Once all the Neurons are Prepped...<ACTIVATE>!*/ 
+        
     }
     /** <Instantiate_PreFlop_Neurons> */
         void prepSTATE0Neuron(String [] cards){
             // What Matters for pre-flop conditions?
             createSelfInstance(cards);
-            new Perceptron(this.SELF);
+            Perceptron p0 =  new Perceptron(this.SELF);
+            this.selfconv = p0;
         }
         /** <Instantiate_Flop_Neurons> */
         void prepSTATE1Neuron(String [] cards){
             //Whats important about flop?
             createSelfInstance(cards);
-            new Perceptron(this.SELF);
+            Perceptron p1 = new Perceptron(this.SELF);
+            this.selfconv = p1;
         }
         /** <Instantiate_Turn_Neurons> */
         void prepSTATE2Neuron(String [] cards){
             //What happens at the turn?
             createSelfInstance(cards);
-            new Perceptron(this.SELF);
+            Perceptron p2 = new Perceptron(this.SELF);
+            this.selfconv = p2;
         }
         /** <Instantiate_Table_Neurons> */
         void prepSTATE3Neuron(String [] cards){
             //What are the results at STATE3?
             createSelfInstance(cards);
-            new Perceptron(this.SELF);
+            Perceptron p3 = new Perceptron(this.SELF);
+            this.selfconv = p3;
         }
         
         /** <Instantiate_the_SELF_Vector> */
@@ -86,6 +95,41 @@ public class Neuron {
             Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(str);
             while (m.find()){return Double.parseDouble(m.group(1));}
             return dig;
+        }
+        
+        static Map<Integer,Vector<Perceptron>> convolveBatch(Vector<Neuron>S0,
+                           Vector<Neuron>S1,
+                           Vector<Neuron>S2,
+                           Vector<Neuron>S3){
+            boolean dims = false;
+            Map<Integer,Vector<Perceptron>> statemap = new HashMap<>();
+            Vector<Vector<Card>> states = new Vector<>();
+            
+            if(S0.size()==S1.size() && (S3.size()==S2.size()) 
+            && (S0.size()==S2.size())){dims=true;}
+            if(dims){
+                //Create new Perceptron for every sum of States
+                int index = 0;
+                for(Neuron n : S0){
+                    Vector<Perceptron> stateconfig = new Vector<>();
+                    Vector<Card> complete = new Vector<>();
+                    stateconfig.add(n.selfconv);
+                    stateconfig.add(S1.get(index).selfconv);
+                    stateconfig.add(S2.get(index).selfconv);
+                    stateconfig.add(S3.get(index).selfconv);
+                    // Now add the cards themselves
+                    Vector<Card> holding = n.SELF;
+                    Vector<Card> visible = S3.get(index).SELF;
+                    for(Card h : holding){complete.add(h);}
+                    for(Card v : visible){complete.add(v);}
+                    states.add(complete);
+                    statemap.put(index,stateconfig);
+                    index += 1;
+                }
+                
+            }
+            Neuron.STATES = states;
+            return statemap;
         }
 
     
@@ -111,7 +155,10 @@ public class Neuron {
             System.out.println(NEURONS3.size()+" STATE3 Neurons Instantiated");
             //Take a peek at first set of states for debugging 
             //for(Card c : NEURONS3.get(0).SELF){c.showMe();}
-            
+            Map<Integer,Vector<Perceptron>> STATE_MAP = 
+            Neuron.convolveBatch(NEURONS0,NEURONS1,NEURONS2,NEURONS3);
+            //Activate with Neuron.STATES and the STATE_MAP to determine 
+            //outocme label 
             
             
            }
@@ -184,6 +231,19 @@ public class Neuron {
       //For each Rank, how many diff cards present build a straight? 
       public Map<Integer,Integer> straitBinCounts = new HashMap<>();
       
+      // These are crude Memory Cells 
+      public Vector<Card> pair    = new Vector<>();
+      public Vector<Card> twopair = new Vector<>();
+      public Vector<Card> threek  = new Vector<>();
+      public Vector<Card> flush   = new Vector<>();
+      public Vector<Card> strait  = new Vector<>();
+      // The more rare arrangements 
+      public Vector<Card> fullhouse = new Vector<>();
+      public Vector<Card> strtflush = new Vector<>();
+      public Vector<Card> fourkind  = new Vector<>();
+      public Vector<Card> rylflush  = new Vector<>();
+      
+      
       //Contruct Perceptron
       public Perceptron(Vector <Card> cardsIn){
           /** Keep this as Generic as possible */
@@ -194,24 +254,101 @@ public class Neuron {
           this.suitedBinCounts = suitCheck(cardsIn);
           //Proximity check
           this.straitBinCounts = nearCheck(cardsIn);
+          ////////////////////////////////////////////////////
+          //TODO: Now draw inferences from bin observations //
+          enumerateFeaturesFromBinCounts();
       }
       
+      /** <Compare_Input_Card_Ranks>*/
       Map<Integer,Integer> rankCheck(Vector<Card>cards){
           Map<Integer,Integer> rankoutfound = new HashMap<>();
+          Vector<Integer>ranks = new Vector<>();
+          Vector<String> suits = new Vector<>();
+          int size = cards.size();
+          for(Card c : cards){ranks.add(c.rank); suits.add(c.suit);}
+          // Now check for matches, that aren't same card
+          for(Card c : cards){
+              int i = 0;
+              int count = 0;
+              for(Integer r : ranks){
+                  if(c.rank==r && c.suit!=suits.get(i)){count+=1;}
+                  i+=1;
+              }
+              rankoutfound.put(c.rank,count);   
+          }
+          //Verify this works
           return rankoutfound;
       }
       
       Map<String,Integer> suitCheck(Vector<Card>cards){
           Map<String,Integer> suitoutfound = new HashMap<>();
+          Vector<Integer>ranks = new Vector<>();
+          Vector<String>suits = new Vector<>();
+          for(Card c : cards){ranks.add(c.rank); suits.add(c.suit);}
+          //Now check for suit matches, that are diff cards
+          Map<String,Integer> counter = new HashMap<>();
+          for(String s : Card.types){counter.put(s,0);}
+          for(Card d : cards){
+              int i = 0;
+              int count = 0;
+              for(String suit : suits){
+                  if(suit.compareTo(d.suit)==0 && (d.rank)!=ranks.get(i)){count+=1;}
+                  i += 1;
+              }
+              int newCount = counter.get(d.suit)+count;
+              suitoutfound.put(d.suit,newCount);
+              //Not sure if this works? 
+          }
           return suitoutfound;
       }
       
       Map<Integer,Integer> nearCheck(Vector<Card>cards){
           Map<Integer,Integer> strtoutfound = new HashMap<>();
+          for(Card c : cards){
+              int outs = 0;
+              for(Card d : cards){
+                  if(Math.abs(c.rank-d.rank)<=4 && (c.rank!=d.rank)){
+                      outs++;
+                  }
+              }
+              strtoutfound.put(c.rank,outs);
+          }
           return strtoutfound;
+      }
+      
+      /**TODO: Write this method */
+      void enumerateFeaturesFromBinCounts(){
+          //Start with ranked_Bin_Counts
+          for(Map.Entry<Integer,Integer>entry:this.rankedBinCounts.entrySet()){
+              if(entry.getValue()==2){/** <Pair?>*/}
+              if(entry.getValue()==3){/** <Trip?>*/}
+              if(entry.getValue()==4){/** <Quad?>*/}
+              if(entry.getValue()>5){System.out.println("ERROR");}
+          }
+          //Check suited_Bin_Counts
+          for(Map.Entry<String,Integer>entry:this.suitedBinCounts.entrySet()){
+              //Do I care about near flushes at this stage? idts...
+              if(entry.getValue()==5){/**Flush*/}
+              if(entry.getValue()>5){System.out.println("ERROR");}
+          }
+          //check strait_Bin_Counts, also want highest ranks possible
+          for(Map.Entry<Integer,Integer>entry:this.straitBinCounts.entrySet()){
+              if(entry.getValue()==5){/** <Straight> */}
+               
+          }
+          // What do these results mean for getting answer?
       }
       
       
   }/** <EndOf_PERCEPTRON>*/ 
+ 
+  public static class Activation implements Runnable{
+      
+      public Activation(){
+          
+      }
+      
+      public void run(){}
+  }
  
 }/**<EndOf_NEURON>*/
