@@ -159,7 +159,7 @@ public class Neuron {
             Neuron.convolveBatch(NEURONS0,NEURONS1,NEURONS2,NEURONS3);
             //Activate with Neuron.STATES and the STATE_MAP to determine 
             //outocme label 
-            
+            Classifier labeler = new Classifier(STATE_MAP,Neuron.STATES);
             
            }
         }

@@ -43,4 +43,24 @@ public class Card{
 	    else if(this.rank==13){System.out.print("K"+this.suit+" ");}
 	    else if(this.rank==14){System.out.print("A"+this.suit+" ");}
 	    }
+	  
+	/**Determine if <Card_Object> is the same Rank as a given <Card>*/
+	public boolean sameRank(Card b){
+	    boolean ans = false;
+	    if(this.rank==b.rank && (this.suit.compareTo(b.suit)!=0)){
+	        ans = true;
+	    }return ans;
+	}
+	
+	/**Determine if Card object has the same suit as another card */
+	public boolean sameSuit(Card b){
+	    boolean ans = false;
+	    if(this.rank!=b.rank && this.suit.compareTo(b.suit)==0){
+	        ans=true;
+	    }return ans;
+	}
+	
+	/**Compare this card objects rank with another */
+    public int proximity(Card b){return Math.abs(this.rank - b.rank);}
+	 
 }
