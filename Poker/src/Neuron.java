@@ -209,7 +209,8 @@ public class Neuron {
             /** Every element is actually 1ROUND */ 
            for(String ROUND : this.DATAIN){
                this.HANDS.add(ROUND.split(",")[0]);
-               this.FLOPS.add(ROUND.split(",")[1]);
+               try{this.FLOPS.add(ROUND.split(",")[1]);}
+               catch(ArrayIndexOutOfBoundsException e){System.out.println(ROUND.split(",")[0]);}
                this.TURNS.add(ROUND.split(",")[2]);
                this.TABLES.add(ROUND.split(",")[3]);
            }

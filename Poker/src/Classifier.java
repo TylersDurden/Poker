@@ -105,12 +105,22 @@ public class Classifier {
         As the final addition to the table, the river decision tree
         will ultimately decide the final hand made with cards available*/
         void river(){
-        
+            
             /** Alt: <ForLoopConvolution?>*/
             //Pair mappings - rank to the cards making that pair
             Map<Integer,Vector<Card>> pairs = new HashMap<>();
             Map<String, Vector<Card>> suits = new HashMap<>();
             Map<Integer,Vector<Card>> stray = new HashMap<>();
+            
+            boolean hip = false;//hit pair 
+            boolean pair = false;
+            boolean twopair = false;
+            boolean threek = false;
+            boolean flushed = false;
+            boolean strayt = false;
+            boolean full = false;
+            boolean strflush = false;
+            boolean rylflush = false;
             for(Card c : this.STATE){
                 Vector<Card>paired = new Vector<>();
                 Vector<Card>suited = new Vector<>();
@@ -138,20 +148,43 @@ public class Classifier {
                 pairs.put(c.rank,paired);
                 suits.put(c.suit,suited);
                 stray.put(c.rank,strait);
+                hip = hitp;
             }
+          
             // Based on Map configs, most hands can be classified already
             //TODO: Write this identification process! 
             /** Steps:  
              * <[1]ID:Pair,TwoPair,3Kind,FullHouse,4Kind>
              * <[2]ID:Flush,StraightFlush,RoyalFlush>---\  These two should 
              * <[3]ID:Straight,StraightFlush>-----------/  work together
-             */
-            for(Map.Entry<Integer,Vector<Card>>entry:paired.entrySet()){}
-            for(Map.Entry<Integer,Vector<Card>>entry:strait.entrySet()){}
-            for(Map.Entry<String, Vector<Card>>entry:suited.entrySet()){}
+             *<PAIR_CHECKS>*/
+            for(Map.Entry<Integer,Vector<Card>>entry:pairs.entrySet()){
+                if(entry.getValue().size()==2){this.pair = entry.getValue();pair=true;}
+                if(entry.getValue().size()==2 && pair && entry.getKey()!=this.pair.get(0).rank){
+                    this.twopair = entry.getValue();}
+                if(entry.getValue().size()==3){this.threekind = entry.getValue();threek=true;}
+                if(entry.getValue().size()==4){this.quads = entry.getValue();}
+                 
+            }
             
+            /** <STRAIGHT_CHECKS>*/
+            //Eliminate partial straights
+            
+            /** <PAIR> Looks God*/
+            if(pair && !twopair){for(Card c : this.pair){c.showMe();}}
+            /** <Two_PAIR> Looks Good*/
+            if(pair && twopair){System.out.println("Two Pair");}
+                
+            /**<ThreeKind> Working */
+            if(threek){System.out.println("Three of a Kind");}
+            /** <Flush> Working */
+            if(this.flush.size()==5){System.out.println("Flush");}
+            /** <Straight> TODO: Unfinished */
+            //if(strayt){System.out.println("Straight");}
+            if(full){System.out.println("Full House");}
+            
+            System.out.println("\n--------------------------------");
         }
-
 
     }
 }
