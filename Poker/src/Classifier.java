@@ -119,6 +119,7 @@ public class Classifier {
             boolean flushed = false;
             boolean strayt = false;
             boolean full = false;
+            boolean fourk = false;
             boolean strflush = false;
             boolean rylflush = false;
             for(Card c : this.STATE){
@@ -161,30 +162,64 @@ public class Classifier {
             for(Map.Entry<Integer,Vector<Card>>entry:pairs.entrySet()){
                 if(entry.getValue().size()==2){this.pair = entry.getValue();pair=true;}
                 if(entry.getValue().size()==2 && pair && entry.getKey()!=this.pair.get(0).rank){
-                    this.twopair = entry.getValue();}
+                    this.twopair = entry.getValue();}//TODO: Miss some two pair situations
                 if(entry.getValue().size()==3){this.threekind = entry.getValue();threek=true;}
-                if(entry.getValue().size()==4){this.quads = entry.getValue();}
+                if(entry.getValue().size()==4){this.quads = entry.getValue();fourk=true;}
                  
             }
+            /** <SUIT_CHECKS> **/
+           for(Map.Entry<String,Vector<Card>>entry:suits.entrySet()){
+               if(entry.getValue().size()>4){flushed=true;flush = entry.getValue();}
+           }
+            
             
             /** <STRAIGHT_CHECKS>*/
-            //Eliminate partial straights
-            
+            int max_hits = 0;
+            Map<Integer,String> CARDS = new HashMap<>();
+            for(Map.Entry<Integer,Vector<Card>>entry:stray.entrySet()){
+                if(entry.getValue().size()>4){
+                    for(Card c : entry.getValue()){CARDS.put(c.rank,c.suit);}
+                    }
+                }
+            //Make a List of unique ranks (no pairs)
+            List<Integer>RANKS = new ArrayList<Integer>(CARDS.keySet());
+            Collections.sort(RANKS);
+            boolean str = false;
+            int index = 0;
+            for(Integer r : RANKS){
+                if(index>0){
+                    if(Math.abs(r-RANKS.get(index-1))==1){this.straight.add(new Card(r,CARDS.get(r)));}
+//                    else{new Card(r,CARDS.get(r)).showMe();}
+                }
+                index += 1;
+            }
+            if(this.straight.size()>4){strayt=true;}else{strayt=false;}
+            if(strayt && flushed){strflush=true;}
+            if(strflush){
+                if(this.flush.get(this.flush.size()-1).rank==14){rylflush=true;}
+            }
+
+
             /** <PAIR> Looks God*/
-            if(pair && !twopair){for(Card c : this.pair){c.showMe();}}
+            if(pair && !twopair && !threek && !flushed && !strayt){System.out.print("Pair");}
             /** <Two_PAIR> Looks Good*/
             if(pair && twopair){System.out.println("Two Pair");}
                 
             /**<ThreeKind> Working */
             if(threek){System.out.println("Three of a Kind");}
             /** <Flush> Working */
-            if(this.flush.size()==5){System.out.println("Flush");}
+            if(flushed){System.out.println("Flush");} 
+            else{flushed=false;}
             /** <Straight> TODO: Unfinished */
-            //if(strayt){System.out.println("Straight");}
+            if(strayt){System.out.println("Straight");}
             if(full){System.out.println("Full House");}
-            
+            if(fourk){System.out.println("Four of a Kind");}
+            if(strflush){System.out.println("Straight Flush");}
+            if(rylflush){System.out.println("Royal Flush");}
+            if(!fourk && !pair && !twopair && !threek && !flushed && !full && !strayt ){System.out.println("High Card?");}
             System.out.println("\n--------------------------------");
         }
 
     }
 }
+ 
