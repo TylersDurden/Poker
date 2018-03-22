@@ -138,7 +138,7 @@ public class Neuron {
         if(args.length<1){System.out.println("Incorrect Usage.");}
         else{
             TrainingDataPipeLine tdpl = new TrainingDataPipeLine(args[0]);
-             if(tdpl.goodDims){System.out.println("Correct Dimensions");}
+             if(tdpl.goodDims){/*System.out.println("Correct Dimensions");*/}
             // Create Neurons By STATE 
             Vector<Neuron> NEURONS0 = new Vector<>();
             Vector<Neuron> NEURONS1 = new Vector<>();
@@ -148,13 +148,13 @@ public class Neuron {
             for(String flop : tdpl.FLOPS){NEURONS1.add(new Neuron(flop));}
             for(String turn : tdpl.TURNS){NEURONS2.add(new Neuron(turn));}
             for(String cards: tdpl.TABLES){NEURONS3.add(new Neuron(cards));}
-            /** Debug PrintOut */
+            /** Debug PrintOut 
             System.out.println(NEURONS0.size()+" STATE0 Neurons Instantiated");
             System.out.println(NEURONS1.size()+" STATE1 Neurons Instantiated");
             System.out.println(NEURONS2.size()+" STATE2 Neurons Instantiated");
             System.out.println(NEURONS3.size()+" STATE3 Neurons Instantiated");
             //Take a peek at first set of states for debugging 
-            //for(Card c : NEURONS3.get(0).SELF){c.showMe();}
+            //for(Card c : NEURONS3.get(0).SELF){c.showMe();} */
             Map<Integer,Vector<Perceptron>> STATE_MAP = 
             Neuron.convolveBatch(NEURONS0,NEURONS1,NEURONS2,NEURONS3);
             //Activate with Neuron.STATES and the STATE_MAP to determine 
@@ -216,13 +216,9 @@ public class Neuron {
            }
            this.doneReading = true; 
         }
-        
-        
   }/**<EndOf_TrainingDataPipeLine>*/
  
-  /** <PERCEPTRON:> 
-   * 
-   */
+  /** <PERCEPTRON:> */
   public static class Perceptron {
       
       //For each Rank, how many diff cards with this rank are present?

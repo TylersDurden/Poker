@@ -8,7 +8,7 @@ public class Classifier {
 
     public Classifier(Map<Integer, Vector<Neuron.Perceptron>> smap, Vector<Vector<Card>> sdat) {
         //Want to work with the Decision Tree idea first
-        System.out.println(sdat.size() + " Hands being fed into the decision tree.");
+       // System.out.println(sdat.size() + " Hands being fed into the decision tree.");
         for (Vector<Card> ROUND : sdat) {
             new DecisionTree(ROUND);
         }
@@ -114,7 +114,7 @@ public class Classifier {
             
             boolean hip = false;//hit pair 
             boolean pair = false;
-            boolean twopair = false;
+            boolean toopair = false;
             boolean threek = false;
             boolean flushed = false;
             boolean strayt = false;
@@ -159,14 +159,22 @@ public class Classifier {
              * <[2]ID:Flush,StraightFlush,RoyalFlush>---\  These two should 
              * <[3]ID:Straight,StraightFlush>-----------/  work together
              *<PAIR_CHECKS>*/
+            Vector<Card>too = new Vector<>();
             for(Map.Entry<Integer,Vector<Card>>entry:pairs.entrySet()){
-                if(entry.getValue().size()==2){this.pair = entry.getValue();pair=true;}
-                if(entry.getValue().size()==2 && pair && entry.getKey()!=this.pair.get(0).rank){
-                    this.twopair = entry.getValue();}//TODO: Miss some two pair situations
+                if(entry.getValue().size()==2 && !pair && ! toopair){this.pair = entry.getValue();pair=true;}
+                if(entry.getValue().size()==2 && pair){toopair=true;too = entry.getValue();}
                 if(entry.getValue().size()==3){this.threekind = entry.getValue();threek=true;}
                 if(entry.getValue().size()==4){this.quads = entry.getValue();fourk=true;}
-                 
+                if(threek && pair){
+                	for(Card c:this.threekind){this.fullhouse.add(c);}
+                	for(Card d:this.pair){this.fullhouse.add(d);}
+                	full=true;
+                }
+                if(toopair){for(Card d : too){this.twopair.add(d);}}
             }
+            /**<TwoPairCleanUp>*/
+          
+            
             /** <SUIT_CHECKS> **/
            for(Map.Entry<String,Vector<Card>>entry:suits.entrySet()){
                if(entry.getValue().size()>4){flushed=true;flush = entry.getValue();}
@@ -195,29 +203,48 @@ public class Classifier {
             }
             if(this.straight.size()>4){strayt=true;}else{strayt=false;}
             if(strayt && flushed){strflush=true;}
-            if(strflush){
-                if(this.flush.get(this.flush.size()-1).rank==14){rylflush=true;}
+            if(strflush|| flushed){ /** <ROYALFLUSHCHECK> */
+            	boolean ace = false;
+            	boolean king = false;
+            	boolean queen = false;
+            	boolean jack = false;
+            	boolean ten = false;
+               for(Card c : this.STATE){
+            	   if(c.rank==14){ace=true;}
+            	   if(c.rank==13){king=true;}
+            	   if(c.rank==12){queen=true;}
+            	   if(c.rank==11){jack=true;}
+            	   if(c.rank==10){ten=true;}
+               }
+               if(ace && king && queen && jack && ten){rylflush=true;} 
             }
 
-
-            /** <PAIR> Looks God*/
-            if(pair && !twopair && !threek && !flushed && !strayt){System.out.print("Pair");}
-            /** <Two_PAIR> Looks Good*/
-            if(pair && twopair){System.out.println("Two Pair");}
                 
-            /**<ThreeKind> Working */
-            if(threek){System.out.println("Three of a Kind");}
-            /** <Flush> Working */
-            if(flushed){System.out.println("Flush");} 
+
+
+            /** <PairNotWorking>*/
+            if(pair && !toopair && !threek && !flushed && !strayt){System.out.print("Pair");}
+            /** <TwoPairWorking>*/
+            if(toopair && !threek){System.out.println("Two Pair");
+            for(Card c: this.pair){c.showMe();}for(Card d:this.twopair){d.showMe();}
+            	System.out.println("");
+            }          
+            
+            /**<ThreeKindWorking> */
+            if(threek && !pair){System.out.println("Three of a Kind");for(Card c: this.pair){c.showMe();}}
+            /** <FlushWorking> */
+            if(flushed && !rylflush && !strflush){System.out.println("Flush");} 
             else{flushed=false;}
-            /** <Straight> TODO: Unfinished */
-            if(strayt){System.out.println("Straight");}
+            /** <StraightWorking>*/
+            if(strayt && !rylflush && !flushed && !strflush){System.out.println("Straight");}
             if(full){System.out.println("Full House");}
             if(fourk){System.out.println("Four of a Kind");}
             if(strflush){System.out.println("Straight Flush");}
             if(rylflush){System.out.println("Royal Flush");}
-            if(!fourk && !pair && !twopair && !threek && !flushed && !full && !strayt ){System.out.println("High Card?");}
-            System.out.println("\n--------------------------------");
+            if(!pair && !toopair && !threek && !flushed && !full &&!fourk  && !strayt && !rylflush){
+            	System.out.println("High Card?");}
+           //System.out.println("\n");
+           // System.out.println("\n");
         }
 
     }
