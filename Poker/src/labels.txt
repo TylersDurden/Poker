@@ -1,0 +1,12 @@
+Royal Flush
+Straight Flush
+Four of a Kind
+Full House
+Straight
+Flush
+Three of a Kind
+Two Pair
+7S 7C 7S 7C 9C 9D 9C 9D 9C 9D 
+Two Pair
+KH KC KH KC 
+High Card?
