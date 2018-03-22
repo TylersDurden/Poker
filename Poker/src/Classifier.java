@@ -172,8 +172,10 @@ public class Classifier {
                 }
                 if(toopair){for(Card d : too){this.twopair.add(d);}}
             }
-            /**<TwoPairCleanUp>*/
-          
+            /**<TwoPairCleanUp>TODO*/
+          if(toopair && !this.pair.get(0).sameRank(this.twopair.get(this.twopair.size()-1))){
+        	  
+          }else{toopair = false;}
             
             /** <SUIT_CHECKS> **/
            for(Map.Entry<String,Vector<Card>>entry:suits.entrySet()){
@@ -215,23 +217,16 @@ public class Classifier {
             	   if(c.rank==12){queen=true;}
             	   if(c.rank==11){jack=true;}
             	   if(c.rank==10){ten=true;}
-               }
+               }//If flush is made up of all face cards and  10 it ROYAL 
                if(ace && king && queen && jack && ten){rylflush=true;} 
             }
 
-                
-
-
             /** <PairNotWorking>*/
-            if(pair && !toopair && !threek && !flushed && !strayt){System.out.print("Pair");}
+            if(pair && !toopair && !threek && !flushed && !strayt){System.out.print("Pair\n");}
             /** <TwoPairWorking>*/
-            if(toopair && !threek){System.out.println("Two Pair");
-            for(Card c: this.pair){c.showMe();}for(Card d:this.twopair){d.showMe();}
-            	System.out.println("");
-            }          
-            
+            if(toopair && !threek){System.out.println("Two Pair"); }          
             /**<ThreeKindWorking> */
-            if(threek && !pair){System.out.println("Three of a Kind");for(Card c: this.pair){c.showMe();}}
+            if(threek && !pair){System.out.println("Three of a Kind");}
             /** <FlushWorking> */
             if(flushed && !rylflush && !strflush){System.out.println("Flush");} 
             else{flushed=false;}
@@ -241,10 +236,7 @@ public class Classifier {
             if(fourk){System.out.println("Four of a Kind");}
             if(strflush){System.out.println("Straight Flush");}
             if(rylflush){System.out.println("Royal Flush");}
-            if(!pair && !toopair && !threek && !flushed && !full &&!fourk  && !strayt && !rylflush){
-            	System.out.println("High Card?");}
-           //System.out.println("\n");
-           // System.out.println("\n");
+            if(!pair&&!toopair&&!threek&& !flushed&&!full &&!fourk &&!strayt &&!rylflush){System.out.println("High Card?");}
         }
 
     }

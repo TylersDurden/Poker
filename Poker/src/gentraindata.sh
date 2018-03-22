@@ -18,7 +18,7 @@ echo 'Generating training_data with 10K hands.'
 touch trainingdata.txt
 java AI 10000 > trainingdata.txt 
 echo 'Success. Now classifying/labeling all 10K hands'
-# touch pokerdata.txt 
-# java Neuron trainingdata.txt > pokerdata.txt
+touch pokerdata.txt 
+java Neuron trainingdata.txt > pokerdata.txt
 
 # [3] Give the AI the 10 base logic data, then 10K sample hands for training 
