@@ -47,3 +47,22 @@ at any given state (based on the learned knowledge of which decisions are best).
 
 ![Example Output](https://raw.githubusercontent.com/TylersDurden/Poker/master/ExOut.png)
 
+To do this, the program will first start generating lots of random hands, and
+figure out the distribution of Poker hands that emerge from the sequence of 
+cards dealt during the round. As a more precise distribution of hands grows as
+the number of total sample hands grows, the decision making process for potential
+options at each given state (Pre-Flop, Flop, etc.) depending on the hand dealt. 
+
+At about 1000 Hands we find that NO Royal Flushes were dealt. On the other end, about
+20% of the time no hands were hit (only high card). The bulk of the distribution is
+at a Pair ~43% of the time, Two Pair ~25% of the time, 3 of a Kind at ~5%, Flush was
+dealt ~2% of the time, Full House ~3% of the time, and a Four of a Kind and Straight 
+Flush were dealt less than 1% of the time. Upon initial inspection this distribution
+seems fairly realistic for what a play could expect to be dealt after 1000 hands. 
+
+# AI Development: Computers Counting Cards
+At this point, the program is capable of generating lots of training data, labeling
+and classifying this data, and making some initial observations about the output. The
+next step will be to start looking at each STATE with respect to the final outcome, and
+start using knowledge of outcomes to start creating weights based on the expectations 
+the program has about what **could** happen based on what already *has* happened. 
