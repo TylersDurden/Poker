@@ -61,7 +61,7 @@ Flush were dealt less than 1% of the time. Upon initial inspection this distribu
 seems fairly realistic for what a play could expect to be dealt after 1000 hands. 
 
 Using these odds we assign initial weights to each hand as shown below. 
-![Example Scores](https://raw.githubusercontent.com/TylersDurden/Poker/master/exout1.png)
+![Example Scores](https://raw.githubusercontent.com/TylersDurden/Poker/master/ExOut.png)
 
 # AI Development: Computers Counting Cards
 At this point, the program is capable of generating lots of training data, labeling
