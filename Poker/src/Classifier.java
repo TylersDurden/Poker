@@ -150,6 +150,7 @@ public class Classifier {
                 suits.put(c.suit,suited);
                 stray.put(c.rank,strait);
                 hip = hitp;
+                c.showMe();
             }
           
             // Based on Map configs, most hands can be classified already
@@ -220,23 +221,22 @@ public class Classifier {
                }//If flush is made up of all face cards and  10 it ROYAL 
                if(ace && king && queen && jack && ten){rylflush=true;} 
             }
-
             /** <PairNotWorking>*/
-            if(pair && !toopair && !threek && !flushed && !strayt){System.out.print("Pair\n");}
+            if(pair && !toopair && !threek && !flushed && !strayt && !full){System.out.println("Pair");}
             /** <TwoPairWorking>*/
-            if(toopair && !threek){System.out.println("Two Pair"); }          
+            if(toopair && !threek){System.out.println("TwoPair"); }          
             /**<ThreeKindWorking> */
-            if(threek && !pair){System.out.println("Three of a Kind");}
+            if(threek && !pair){System.out.println("ThreeKind");}
             /** <FlushWorking> */
             if(flushed && !rylflush && !strflush){System.out.println("Flush");} 
             else{flushed=false;}
             /** <StraightWorking>*/
             if(strayt && !rylflush && !flushed && !strflush){System.out.println("Straight");}
-            if(full){System.out.println("Full House");}
-            if(fourk){System.out.println("Four of a Kind");}
-            if(strflush){System.out.println("Straight Flush");}
-            if(rylflush){System.out.println("Royal Flush");}
-            if(!pair&&!toopair&&!threek&& !flushed&&!full &&!fourk &&!strayt &&!rylflush){System.out.println("High Card?");}
+            if(full){System.out.println("FullHouse");}
+            if(fourk){System.out.println("FourKind");}
+            if(strflush){System.out.println("StraightFlush");}
+            if(rylflush){System.out.println("RoyalFlush");}
+            if(!pair&&!toopair&&!threek&& !flushed&&!full &&!fourk &&!strayt &&!rylflush){System.out.println("HighCard");}
         }
 
     }
