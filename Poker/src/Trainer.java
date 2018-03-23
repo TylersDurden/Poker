@@ -38,8 +38,7 @@ public class Trainer implements Runnable{
             System.out.println(
             c+" ["+(100*(this.ODDS.get(c)/data.size()))+"%] = "+
             Trainer.SCORES.get(c)+" points");
-            //Sigmoid these to a good range bc rylflush is HUGE! 
-            
+            //Sigmoid these to a good range bc rylflush is HUGE!  
         }
         
         /** <RUN> */
@@ -50,7 +49,6 @@ public class Trainer implements Runnable{
         File f = Paths.get(System.getProperty("user.dir"),fname).toFile();
         BufferedReader br = null;
         Vector<String>contents = new Vector<>();
-        
       try{
             br = new BufferedReader(new FileReader(f));
             String line;

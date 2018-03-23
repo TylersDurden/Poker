@@ -45,7 +45,7 @@ sequences of Cards, with a final logical outcome label, the intent is to create
 an ability to use Decision Trees and AutoEncoding to select favorable actions 
 at any given state (based on the learned knowledge of which decisions are best). 
 
-![Example Output](https://raw.githubusercontent.com/TylersDurden/Poker/master/ExOut.png)
+![Example Output](https://raw.githubusercontent.com/TylersDurden/Poker/master/ExHands.png)
 
 To do this, the program will first start generating lots of random hands, and
 figure out the distribution of Poker hands that emerge from the sequence of 
