@@ -15,24 +15,19 @@ cat labels.txt
 
 # [2] Now Generate/Label Training Data
 echo 'Generating training_data with hands.'
-rm trainingdata.txt
-rm training0.txt
-rm training1.txt
-touch trainingdata.txt
-touch training0.txt
-touch training1.txt
-java AI 100 > trainingdata.txt
-java AI 500 >> training0.txt 
-java AI 500 >> training1.txt
-echo 'Success. Now classifying/labeling all hands'
 rm pokerdata.txt
-touch pokerdata.txt 
-# Put it all together into one file 
-java Neuron trainingdata.txt > pokerdata.txt
-java Neuron training0.txt >> pokerdata.txt
-java Neuron training1.txt >> pokerdata.txt
-# Now Get some stats about poker data, and create improved decision tree 
-javac Trainer.java
+touch pokerdata.txt
+for i in {1..10}
+    do
+    touch training"$i".txt
+    java AI 100 > training"$i".txt
+    # Combine all into one file 
+    java Neuron training"$i".txt >> pokerdata.txt
+    rm training"$i".txt
+done
+echo 'Success. Now classifying/labeling all hands'
+# Now Get some stats about poker data, and BOOST decision tree 
+javac Trainer.java BST.java 
 java Trainer pokerdata.txt
 
 

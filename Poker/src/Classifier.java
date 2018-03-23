@@ -41,7 +41,8 @@ public class Classifier {
 	    public Vector<Card> quads     = new Vector<>();
 	    public Vector<Card> rylflush  = new Vector<>();
         
-
+        public boolean malformed = false;
+        
         public DecisionTree(Vector<Card> cards) {
             this.STATE = cards;
             this.STATE_NUM = cards.size();
@@ -57,6 +58,7 @@ public class Classifier {
             }
             if (this.STATE_NUM == 7) {
                 this.river = true;
+                for(Card c : this.STATE){c.showMe();}
             }
 
 
@@ -68,13 +70,11 @@ public class Classifier {
         }
 
         public void run() {
-
             /** Two decision trees. One for ranks, and one for suits
              Pair,Two Pair, Trips,Straight,Full House,4 Kind: <RANK> related
              Flush, Straight Flush, Royal Flush: <SUIT> related
              Clearly the rank tree is far more complicated. 
              Start with the suit tree to see if it works. */
-
             //Decision tree for every step
             if (this.preflop) {
                 preflop();
@@ -150,7 +150,6 @@ public class Classifier {
                 suits.put(c.suit,suited);
                 stray.put(c.rank,strait);
                 hip = hitp;
-                c.showMe();
             }
           
             // Based on Map configs, most hands can be classified already
@@ -221,7 +220,8 @@ public class Classifier {
                }//If flush is made up of all face cards and  10 it ROYAL 
                if(ace && king && queen && jack && ten){rylflush=true;} 
             }
-            /** <PairNotWorking>*/
+            if(!this.malformed){
+                /** <PairNotWorking>*/
             if(pair && !toopair && !threek && !flushed && !strayt && !full){System.out.println("Pair");}
             /** <TwoPairWorking>*/
             if(toopair && !threek){System.out.println("TwoPair"); }          
@@ -237,6 +237,7 @@ public class Classifier {
             if(strflush){System.out.println("StraightFlush");}
             if(rylflush){System.out.println("RoyalFlush");}
             if(!pair&&!toopair&&!threek&& !flushed&&!full &&!fourk &&!strayt &&!rylflush){System.out.println("HighCard");}
+            }else{}
         }
 
     }

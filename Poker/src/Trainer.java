@@ -4,6 +4,8 @@ import java.nio.file.*;
 
 public class Trainer implements Runnable{
     
+    public BST probableDecisions; 
+    
     public static final String [] classes = {"HighCard",
                                              "Pair",
                                              "TwoPair",
@@ -14,17 +16,34 @@ public class Trainer implements Runnable{
                                              "FourKind",
                                              "StraightFlush",
                                              "RoyalFlush"};
-    
+    public Map<String,Double> ODDS = new HashMap<>();
+    public static Map<String,Integer> SCORES = new HashMap<>();
+    public Vector<String> DATA = new Vector<>();
     public Trainer(String fname){
         
         Vector<String> data = getContents(fname);
-        Map<String,Double> odds = plainLook(data);
+        this.ODDS = plainLook(data);
+        this.DATA = data;
+        
         int rank = 1;
         System.out.println(data.size()+" samples: ");
         for(String hand : classes){
-            System.out.println(rank+") "+hand+" "+(100*(odds.get(hand)/data.size()))+"%");
+            if(rank==1){Trainer.SCORES.put(hand,10);}
+            else{Trainer.SCORES.put(hand,(int)(100*data.size()/(this.ODDS.get(hand)+0.001*10)));}
             rank+=1;
-        }   
+        }
+        //Straight is sometimes getting ranked higher than full house
+        if(this.ODDS.get("Straight")>this.ODDS.get("FullHouse")){}
+        for(String c : classes){
+            System.out.println(
+            c+" ["+(100*(this.ODDS.get(c)/data.size()))+"%] = "+
+            Trainer.SCORES.get(c)+" points");
+            //Sigmoid these to a good range bc rylflush is HUGE! 
+            
+        }
+        
+        /** <RUN> */
+       run();
     }
     
     Vector<String> getContents(String fname){
@@ -45,7 +64,6 @@ public class Trainer implements Runnable{
         Map<String,Double> frequency = new HashMap<>();
         // Initialize with zeroes
         for(String t : classes){frequency.put(t,0.0);}
-        
         int [] counts = new int[10];
         for(String row : data ){
            for(String e : row.split(" ")){
@@ -63,11 +81,16 @@ public class Trainer implements Runnable{
     }
     
     public void run(){
-        
+       this.probableDecisions = new BST(this.ODDS,this.DATA);
+       this.probableDecisions.generateStateMap(this.DATA);
+       //System.out.println("N = "+N);
     }
     
     public static void main(String[]args){
         if(args.length<1){System.out.println("Incorrect Usage. For Help Enter:\n$java Trainer -h");}
-        else{new Trainer(args[0]);}
+        else{
+            Trainer t = new Trainer(args[0]);
+            }
+        
     }
 }

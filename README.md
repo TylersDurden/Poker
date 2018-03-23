@@ -60,6 +60,9 @@ dealt ~2% of the time, Full House ~3% of the time, and a Four of a Kind and Stra
 Flush were dealt less than 1% of the time. Upon initial inspection this distribution
 seems fairly realistic for what a play could expect to be dealt after 1000 hands. 
 
+Using these odds we assign initial weights to each hand as shown below. 
+![Example Scores](https://raw.githubusercontent.com/TylersDurden/Poker/master/exout1.png)
+
 # AI Development: Computers Counting Cards
 At this point, the program is capable of generating lots of training data, labeling
 and classifying this data, and making some initial observations about the output. The
