@@ -47,20 +47,10 @@ public class Classifier {
             this.STATE = cards;
             this.STATE_NUM = cards.size();
 
-            if (this.STATE_NUM == 2) {
-                this.preflop = true;
-            }
-            if (this.STATE_NUM == 5) {
-                this.flop = true;
-            }
-            if (this.STATE_NUM == 6) {
-                this.turn = true;
-            }
-            if (this.STATE_NUM == 7) {
+            if(this.STATE_NUM == 7) {
                 this.river = true;
                 for(Card c : this.STATE){c.showMe();}
             }
-
 
             if (this.preflop || this.flop || this.turn || this.river) {
                 run();
@@ -75,16 +65,8 @@ public class Classifier {
              Flush, Straight Flush, Royal Flush: <SUIT> related
              Clearly the rank tree is far more complicated. 
              Start with the suit tree to see if it works. */
-            //Decision tree for every step
-            if (this.preflop) {
-                preflop();
-            }
-            if (this.flop) {
-                flop();
-            }
-            if (this.turn) {
-                turn();
-            }
+           
+            
             if (this.river) {
                 river();
             }

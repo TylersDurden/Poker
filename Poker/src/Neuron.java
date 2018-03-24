@@ -339,13 +339,6 @@ public class Neuron {
       
   }/** <EndOf_PERCEPTRON>*/ 
  
-  public static class Activation implements Runnable{
-      
-      public Activation(){
-          
-      }
-      
-      public void run(){}
-  }
+  
  
 }/**<EndOf_NEURON>*/

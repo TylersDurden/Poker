@@ -31,4 +31,6 @@ javac Trainer.java BST.java
 java Trainer pokerdata.txt
 
 
-# [3] Give the AI the 10 base logic data, then 10K sample hands for training 
+# [3] Give the AI the 10 base logic data, 
+# then sample hands for training. See how it does at 
+# Predicting the river. 

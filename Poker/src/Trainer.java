@@ -26,7 +26,7 @@ public class Trainer implements Runnable{
         this.DATA = data;
         
         int rank = 1;
-        System.out.println(data.size()+" samples: ");
+        System.out.println(data.size()+" lines of PokerData Analyzed: ");
         for(String hand : classes){
             if(rank==1){Trainer.SCORES.put(hand,10);}
             else{Trainer.SCORES.put(hand,(int)(100*data.size()/(this.ODDS.get(hand)+0.001*10)));}
@@ -80,8 +80,9 @@ public class Trainer implements Runnable{
     
     public void run(){
        this.probableDecisions = new BST(this.ODDS,this.DATA);
-       this.probableDecisions.generateStateMap(this.DATA);
-       //System.out.println("N = "+N);
+       this.probableDecisions.createInputNodesFromTree(this.DATA);
+       //this.probableDecisions.generateStateMap(this.DATA);
+       
     }
     
     public static void main(String[]args){
