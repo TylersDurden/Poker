@@ -15,13 +15,13 @@ public class BST{
     
     /** <NETWORK_INPUTS>*/
     Vector<Vector<Card>> INPUT = new Vector<>();
-    Vector<Card> S0 = new Vector<>();
-    Vector<Card> S1 = new Vector<>();
-    Vector<Card> S2 = new Vector<>();
-    Vector<Card> S3 = new Vector<>();
-    Vector<Card> S4 = new Vector<>();
-    Vector<Card> S5 = new Vector<>();
-    Vector<Card> S6 = new Vector<>();
+    public Vector<Card> S0 = new Vector<>();
+    public Vector<Card> S1 = new Vector<>();
+    public Vector<Card> S2 = new Vector<>();
+    public Vector<Card> S3 = new Vector<>();
+    public Vector<Card> S4 = new Vector<>();
+    public Vector<Card> S5 = new Vector<>();
+    public Vector<Card> S6 = new Vector<>();
     
     /** <PREFLOP:NETWORK_WEIGHTS> */
    Map<String,Double> pocketpairweights = new HashMap<>();
@@ -157,11 +157,6 @@ public class BST{
     static void generateStateMap(Vector<String>data){
         //int count = 0;
         Map<String,String> cardOdds = new HashMap<>();
-        
-       
-
-        
-        
     }
     
     /** <Extract> double from input String */
@@ -174,7 +169,69 @@ public class BST{
     
     public static void main(String[]unused){}
     
-
+    public static class CardShark implements Runnable{
+        
+        Map<String,Double> ODDS = new HashMap<>();
+        Map<String,Integer> SCORES = new HashMap<>();
+        Vector<Card> s0 = new Vector<>();
+        Vector<Card> s1 = new Vector<>();
+        Vector<Card> s2 = new Vector<>();
+        Vector<Card> s3 = new Vector<>();
+        Vector<Card> s4 = new Vector<>();
+        Vector<Card> s5 = new Vector<>();
+        Vector<Card> s6 = new Vector<>();
+        
+        
+        public CardShark(Vector<Card> S0,
+                         Vector<Card> S1,
+                         Vector<Card> S2,
+                         Vector<Card> S3,
+                         Vector<Card> S4, 
+                         Vector<Card> S5,
+                         Vector<Card> S6,
+                         Map<String,Double> odds,
+                         Map<String,Integer>scores){
+            boolean handdims = false;
+            boolean flopdims = false;
+            boolean turndims = false;
+            boolean rivrdims = false;
+            if(S0.size()==S1.size()){handdims = true;}
+            if(S2.size()==S3.size() && S3.size()==S4.size()){flopdims = true;}
+            if(S4.size()==S0.size()&&S4.size()==S5.size()){turndims = true;}
+            if(S6.size()==S1.size()){rivrdims = true;}
+            if(handdims){System.out.println("STATE0 dims good");}
+            if(flopdims){System.out.println("STATE1 dims good");}
+            if(turndims){System.out.println("STATE2 dims good");}
+            if(rivrdims){System.out.println("STATE3 dims good");}
+            if(handdims && flopdims && turndims && rivrdims){
+                this.ODDS = odds;
+                this.SCORES = scores;
+                this.s0 = S0;
+                this.s1 = S1;
+                this.s2 = S2;
+                this.s3 = S3;
+                this.s4 = S4;
+                this.s5 = S5;
+                this.s6 = S6;
+                System.out.println("All dimensions aligned. Beginning Training.");
+                run();
+            }
+        }
+        
+        public void run(){
+            /**
+             * <Question_1:~__Ranks?__>
+             * <Question_2:~__Suits?__>
+             * <Question_3:~__Straights?__>
+             * 
+             */
+             int index = 0;
+             boolean check01 = false;
+             for(Card c : this.s0){index++;}
+             
+        
+        
+    }
     
     
     

@@ -79,9 +79,32 @@ public class Trainer implements Runnable{
     }
     
     public void run(){
+        //Start Creating the network structure
        this.probableDecisions = new BST(this.ODDS,this.DATA);
+       //create an organized set of card inputs from training data 
        this.probableDecisions.createInputNodesFromTree(this.DATA);
-       //this.probableDecisions.generateStateMap(this.DATA);
+       // Now feed the nodes through an organized decision tree 
+       // It works like this:
+       /**<1> The program is given two cards and it considers potential
+        * hands that are most likely. Then it chooses to play or fold.
+        * <2> Then the three flop cards are added. Options are considered, 
+        * and the program has to decide whether to play or fold. 
+        * <3> The Turn is added, same process. 
+        * <4> The River is added and finally the program has to classify if
+        * the hand was made. If it was correct, reward those decisions. 
+        * If not, make corrections based on errors in scores. 
+        The goal here is to maximize output score my selecting the highest 
+        ranked hand with the lowest probability of occuring. (Best possible)
+        */
+       new BST.CardShark(this.probableDecisions.S0,
+                         this.probableDecisions.S1,
+                         this.probableDecisions.S2,
+                         this.probableDecisions.S3,
+                         this.probableDecisions.S4,
+                         this.probableDecisions.S5,
+                         this.probableDecisions.S6,
+                         this.ODDS,
+                         Trainer.SCORES);
        
     }
     
