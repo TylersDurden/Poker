@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.regex.*;
 
-/** <BST>
+/** <:_[B]oosted[S]earch[T]ree_:>
  * @author ScottRobbins 
  * @date 3/23/18
  */
@@ -180,7 +180,11 @@ public class BST{
         Vector<Card> s4 = new Vector<>();
         Vector<Card> s5 = new Vector<>();
         Vector<Card> s6 = new Vector<>();
-        
+         //Simulate the 1000 hands like an actual game
+         Map<Integer,Vector<Card>> hands_dealt = new HashMap<>();
+         Map<Integer,Vector<Card>> flops_dealt = new HashMap<>();
+         Map<Integer,Vector<Card>> turns_dealt = new HashMap<>();
+         Map<Integer,Vector<Card>> rivrs_dealt = new HashMap<>();
         
         public CardShark(Vector<Card> S0,
                          Vector<Card> S1,
@@ -219,20 +223,49 @@ public class BST{
         }
         
         public void run(){
-            /**
-             * <Question_1:~__Ranks?__>
-             * <Question_2:~__Suits?__>
-             * <Question_3:~__Straights?__>
-             * 
-             */
-             int index = 0;
-             boolean check01 = false;
-             for(Card c : this.s0){index++;}
-             
+      
+         int index = 0;//All 7 SVectors have same indices! 
+         for(Card c : this.s0){
+             Vector<Card>hand = new Vector<>();
+             Vector<Card>flop = new Vector<>();
+             Vector<Card>turn = new Vector<>();
+             Vector<Card>rivr = new Vector<>();
+             //Now fill the vectors 
+             hand.add(c);
+             hand.add(this.s1.get(index));
+             flop.add(this.s2.get(index));
+             flop.add(this.s3.get(index));
+             flop.add(this.s4.get(index));
+             turn.add(this.s5.get(index));
+             rivr.add(this.s6.get(index));
+             this.hands_dealt.put(index,hand);
+             this.flops_dealt.put(index,flop);
+             this.turns_dealt.put(index,turn);
+             this.rivrs_dealt.put(index,rivr);
+             index++;
+         }
+            
+        }
         
+        /**
+         * <PreFlopLearning>
+         */
+        public Map<String,Double> preFlopProbabilities(){
+            Map<String,Double>odds = new HashMap<>();
+            //Using only hands_dealt here and then a 
+            //sample deck, and the initial Prob./Weights 
+            //to make educated guesses abt PF.
+            /** <Consider:_PFR_RFI_Strategies> */
         
+            
+           
+          
+            
+            
+            return odds;
+        }
+    
     }
-    
-    
+
     
 }

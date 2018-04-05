@@ -69,3 +69,5 @@ and classifying this data, and making some initial observations about the output
 next step will be to start looking at each STATE with respect to the final outcome, and
 start using knowledge of outcomes to start creating weights based on the expectations 
 the program has about what **could** happen based on what already *has* happened. 
+
+Training data is created and labeled with the gentraindata.sh script.  

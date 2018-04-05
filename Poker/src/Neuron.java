@@ -6,7 +6,7 @@ import java.util.regex.*;
 
 /**<NEURON>
  * Classify and label the training set, by teaching program
- * to classify Poker Hands. 
+ * to classify Poker Hands. d
  * @author ScottRobbins
  */
 public class Neuron {

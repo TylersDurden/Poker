@@ -14,6 +14,9 @@ echo '10 Essential Poker hand Classes Identified :'
 cat labels.txt
 
 # [2] Now Generate/Label Training Data
+
+
+
 echo 'Generating training_data with hands.'
 rm pokerdata.txt
 touch pokerdata.txt
@@ -34,3 +37,6 @@ java Trainer pokerdata.txt
 # [3] Give the AI the 10 base logic data, 
 # then sample hands for training. See how it does at 
 # Predicting the river. 
+
+echo 'Generating unfinished, unlabeled hands for evaluation'
+java Trainer unsupervised 

@@ -78,24 +78,24 @@ public class Trainer implements Runnable{
         return frequency;
     }
     
+/** <:RUN_IT:>
+ * <1> The program is given two cards and it considers potential
+ * hands that are most likely. Then it chooses to play or fold.
+ * <2> Then the three flop cards are added. Options are considered, 
+ * and the program has to decide whether to play or fold. 
+ * <3> The Turn is added, same process. 
+ * <4> The River is added and finally the program has to classify if
+ * the hand was made. If it was correct, reward those decisions. 
+ * If not, make corrections based on errors in scores. 
+ * The goal here is to maximize output score my selecting the highest 
+ * ranked hand with the lowest probability of occuring. (Best possible)
+ */
     public void run(){
         //Start Creating the network structure
        this.probableDecisions = new BST(this.ODDS,this.DATA);
        //create an organized set of card inputs from training data 
        this.probableDecisions.createInputNodesFromTree(this.DATA);
        // Now feed the nodes through an organized decision tree 
-       // It works like this:
-       /**<1> The program is given two cards and it considers potential
-        * hands that are most likely. Then it chooses to play or fold.
-        * <2> Then the three flop cards are added. Options are considered, 
-        * and the program has to decide whether to play or fold. 
-        * <3> The Turn is added, same process. 
-        * <4> The River is added and finally the program has to classify if
-        * the hand was made. If it was correct, reward those decisions. 
-        * If not, make corrections based on errors in scores. 
-        The goal here is to maximize output score my selecting the highest 
-        ranked hand with the lowest probability of occuring. (Best possible)
-        */
        new BST.CardShark(this.probableDecisions.S0,
                          this.probableDecisions.S1,
                          this.probableDecisions.S2,
@@ -108,11 +108,39 @@ public class Trainer implements Runnable{
        
     }
     
+    /** <MAIN> */
     public static void main(String[]args){
         if(args.length<1){System.out.println("Incorrect Usage. For Help Enter:\n$java Trainer -h");}
-        else{
-            Trainer t = new Trainer(args[0]);
+        else if(args[0].contains(".txt")){Trainer t = new Trainer(args[0]);}
+        if(args[0].compareTo("unsupervised")==0){
+            new Trainer.VirtualPoker(1000000,"trickypoker.txt").run();
+            System.out.println("100000 hands dealt.");
             }
         
     }
+    
+    public static class VirtualPoker implements Runnable{
+        
+        Map<Integer,Vector<Card>> HANDS = new HashMap<>();
+        Map<Integer,Vector<Card>> FLOPS = new HashMap<>();
+        Map<Integer,Vector<Card>> TURNS = new HashMap<>();
+        public int SEQ=0;
+        private int DEPTH;
+        
+        public VirtualPoker(int nHands,String outputfname){
+            this.DEPTH = nHands;
+        }
+        
+        public void run(){
+            while(SEQ<this.DEPTH){
+                Deck d = new Deck();
+                d.shuffle();
+                HANDS.put(SEQ,d.deal(2));
+                FLOPS.put(SEQ,d.deal(1));
+                TURNS.put(SEQ,d.deal(1));
+                SEQ++;
+            }
+        }
+    }
+    
 }

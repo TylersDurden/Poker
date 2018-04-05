@@ -31,6 +31,23 @@ public class Deck {
 		for(Card c : this.self){cardsInPlay.put(c,false);}
 	}
 	
+	/** Return marked deck by putting false for given card inputs
+	and true for for the cards still in play. */
+	public Map<Card,Boolean> markCards(Vector<Card>marked){
+	    Map<Card,Boolean> markedeck = new HashMap<>();
+	    for(Map.Entry<Card,Boolean>entry:this.cardsInPlay.entrySet()){
+	        boolean inhand = false;
+	        for(Card c : marked){
+	            if(c.sameRank(entry.getKey()) && c.sameSuit(entry.getKey())){
+	               inhand = true;
+	            }
+	        }
+	        if(inhand){markedeck.put(entry.getKey(),false);}
+	        else{markedeck.put(entry.getKey(),true);}
+	    }
+	    return markedeck;
+	}
+	
 	public Vector<Card> deal(int nCards){
 	    //shuffle();
 	    Vector<Card> hand = new Vector<>();
@@ -42,23 +59,7 @@ public class Deck {
 	                cardsInPlay.put(i,true);
 	                dealt ++;
 	            }
-	           /**if( (dealt<52 && hand.size()<nCards) && cardsInPlay.get(i)!=true ){
-	               dealt++;
-	               hand.add(i);
-	           }
-	            * 
-	            */
 	        }
-	    
-	     /** once cards are dealt make sure deck knows they're in play
-	    for(Map.Entry<Card,Boolean>entry:cardsInPlay.entrySet()){
-	        for(Card c : hand){
-	            if(entry.getKey().suit.compareTo(c.suit)==0 && 
-	               entry.getKey().rank==c.rank){
-	                cardsInPlay.put(entry.getKey(),true); 
-	            }
-	        }
-	    }*/
  	   return hand;
 	}
 	
