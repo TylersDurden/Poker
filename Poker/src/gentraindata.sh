@@ -39,4 +39,6 @@ java Trainer pokerdata.txt
 # Predicting the river. 
 
 echo 'Generating unfinished, unlabeled hands for evaluation'
-java Trainer unsupervised 
+touch unsupervised.txt
+java Trainer unsupervised > unsupervised.txt
+echo '1000 hands dumped into: /../Poker/src./unsupervised.txt'

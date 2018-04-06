@@ -113,7 +113,7 @@ public class Trainer implements Runnable{
         if(args.length<1){System.out.println("Incorrect Usage. For Help Enter:\n$java Trainer -h");}
         else if(args[0].contains(".txt")){Trainer t = new Trainer(args[0]);}
         if(args[0].compareTo("unsupervised")==0){
-            new Trainer.VirtualPoker(1000000,"trickypoker.txt").run();
+            new Trainer.VirtualPoker(1000,"trickypoker.txt").run();
             System.out.println("100000 hands dealt.");
             }
         
@@ -139,6 +139,9 @@ public class Trainer implements Runnable{
                 FLOPS.put(SEQ,d.deal(1));
                 TURNS.put(SEQ,d.deal(1));
                 SEQ++;
+            }
+            for(Map.Entry<Integer,Vector<Card>>entry:HANDS.entrySet()){
+                for(Card c : entry.getValue()){c.showMe();System.out.println();}
             }
         }
     }
